@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetShop - Registro</title>
+</head>
+<body>
+    <header>
+        <h1>🐾 PetShop - Registro</h1>
+        <nav>
+            <ul>
+                <li><a href="../index.html">Dashboard</a></li>
+                <li><a href="productos.html">Productos</a></li>
+                <li><a href="mascotas.html">Mascotas</a></li>
+                <li><a href="login.html">Iniciar Sesión</a></li>
+                <li><a href="registro.html">Registrarse</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <h2>Crear Nueva Cuenta</h2>
+            <p>Completa el formulario para registrarte en PetShop</p>
+
+            <form action="#" method="post">
+                <fieldset>
+                    <legend>Información Personal</legend>
+
+                    <p>
+                        <label for="nombre">Nombre Completo:</label><br>
+                        <input type="text"
+                               id="nombre"
+                               name="nombre"
+                               required
+                               minlength="2"
+                               maxlength="50"
+                               placeholder="Tu nombre completo"
+                               autocomplete="name">
+                    </p>
+
+                    <p>
+                        <label for="email">Correo Electrónico:</label><br>
+                        <input type="email"
+                               id="email"
+                               name="email"
+                               required
+                               placeholder="tu@email.com"
+                               autocomplete="email">
+                    </p>
+
+                    <p>
+                        <label for="telefono">Teléfono:</label><br>
+                        <input type="tel"
+                               id="telefono"
+                               name="telefono"
+                               required
+                               pattern="[0-9\-\(\)\+\s]+"
+                               placeholder="(555) 123-4567"
+                               autocomplete="tel">
+                    </p>
+
+                    <p>
+                        <label for="fecha_nacimiento">Fecha de Nacimiento:</label><br>
+                        <input type="date"
+                               id="fecha_nacimiento"
+                               name="fecha_nacimiento"
+                               required
+                               max="2006-12-31"
+                               autocomplete="bday">
+                    </p>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Dirección</legend>
+
+                    <p>
+                        <label for="direccion">Dirección:</label><br>
+                        <input type="text"
+                               id="direccion"
+                               name="direccion"
+                               required
+                               placeholder="Calle y número"
+                               autocomplete="street-address">
+                    </p>
+
+                    <p>
+                        <label for="ciudad">Ciudad:</label><br>
+                        <input type="text"
+                               id="ciudad"
+                               name="ciudad"
+                               required
+                               placeholder="Tu ciudad"
+                               autocomplete="address-level2">
+                    </p>
+
+                    <p>
+                        <label for="codigo_postal">Código Postal:</label><br>
+                        <input type="text"
+                               id="codigo_postal"
+                               name="codigo_postal"
+                               required
+                               pattern="[0-9]{5}"
+                               placeholder="12345"
+                               autocomplete="postal-code">
+                    </p>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Credenciales de Acceso</legend>
+
+                    <p>
+                        <label for="usuario">Nombre de Usuario:</label><br>
+                        <input type="text"
+                               id="usuario"
+                               name="usuario"
+                               required
+                               minlength="3"
+                               maxlength="20"
+                               pattern="[a-zA-Z0-9_]+"
+                               placeholder="nombreusuario"
+                               autocomplete="username">
+                        <small>Solo letras, números y guiones bajos</small>
+                    </p>
+
+                    <p>
+                        <label for="password">Contraseña:</label><br>
+                        <input type="password"
+                               id="password"
+                               name="password"
+                               required
+                               minlength="8"
+                               pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{8,}$"
+                               autocomplete="new-password">
+                        <small>Mínimo 8 caracteres, debe incluir mayúscula, minúscula y número</small>
+                    </p>
+
+                    <p>
+                        <label for="confirmar_password">Confirmar Contraseña:</label><br>
+                        <input type="password"
+                               id="confirmar_password"
+                               name="confirmar_password"
+                               required
+                               autocomplete="new-password">
+                    </p>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Preferencias e Intereses</legend>
+
+                    <p><strong>¿Qué tipo de mascotas te interesan?</strong></p>
+                    <label><input type="checkbox" name="interes" value="perros"> Perros</label><br>
+                    <label><input type="checkbox" name="interes" value="gatos"> Gatos</label><br>
+                    <label><input type="checkbox" name="interes" value="aves"> Aves</label><br>
+                    <label><input type="checkbox" name="interes" value="peces"> Peces</label><br>
+                    <label><input type="checkbox" name="interes" value="roedores"> Roedores</label><br>
+                    <label><input type="checkbox" name="interes" value="reptiles"> Reptiles</label>
+
+                    <p>
+                        <label for="experiencia">Experiencia con mascotas:</label><br>
+                        <select id="experiencia" name="experiencia" required>
+                            <option value="">Selecciona tu experiencia</option>
+                            <option value="principiante">Principiante</option>
+                            <option value="intermedio">Intermedio</option>
+                            <option value="avanzado">Avanzado</option>
+                            <option value="profesional">Profesional</option>
+                        </select>
+                    </p>
+
+                    <p>
+                        <label for="comentarios">Comentarios adicionales:</label><br>
+                        <textarea id="comentarios"
+                                  name="comentarios"
+                                  rows="4"
+                                  cols="50"
+                                  maxlength="500"
+                                  placeholder="Cuéntanos sobre ti y tus intereses (opcional)"></textarea>
+                    </p>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Términos y Condiciones</legend>
+
+                    <p>
+                        <label>
+                            <input type="checkbox" name="terminos" required>
+                            Acepto los <a href="#terminos" target="_blank">términos y condiciones</a>
+                        </label>
+                    </p>
+
+                    <p>
+                        <label>
+                            <input type="checkbox" name="newsletter">
+                            Deseo recibir noticias y promociones por correo electrónico
+                        </label>
+                    </p>
+
+                    <p>
+                        <label>
+                            <input type="checkbox" name="notificaciones">
+                            Acepto recibir notificaciones sobre mascotas disponibles
+                        </label>
+                    </p>
+                </fieldset>
+
+                <p>
+                    <button type="submit">Crear Cuenta</button>
+                    <button type="reset">Limpiar Formulario</button>
+                </p>
+            </form>
+        </section>
+
+        <aside>
+            <h3>¿Ya tienes cuenta?</h3>
+            <p><a href="login.html">Inicia sesión aquí</a></p>
+
+            <h4>Beneficios de registrarte:</h4>
+            <ul>
+                <li>✅ Acceso prioritario a nuevas mascotas</li>
+                <li>✅ Descuentos exclusivos en productos</li>
+                <li>✅ Seguimiento de adopciones</li>
+                <li>✅ Newsletter con consejos de cuidado</li>
+                <li>✅ Historial de compras</li>
+            </ul>
+        </aside>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 PetShop. Todos los derechos reservados.</p>
+        <address>
+            <p>📍 Dirección: Av. Principal 123, Ciudad</p>
+            <p>📞 Teléfono: (555) 123-4567</p>
+            <p>✉️ Email: contacto@petshop.com</p>
+        </address>
+    </footer>
+</body>
+</html>
