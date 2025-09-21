@@ -1,0 +1,9 @@
+<svg width="200" height="150" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="150" fill="#8B4513"/>
+  <circle cx="100" cy="60" r="25" fill="#D2691E"/>
+  <circle cx="80" cy="80" r="8" fill="#654321"/>
+  <circle cx="120" cy="80" r="8" fill="#654321"/>
+  <circle cx="85" cy="90" r="6" fill="#654321"/>
+  <circle cx="115" cy="90" r="6" fill="#654321"/>
+  <text x="100" y="130" text-anchor="middle" font-family="Arial" font-size="14" fill="white" font-weight="bold">Alimento Perro</text>
+</svg>

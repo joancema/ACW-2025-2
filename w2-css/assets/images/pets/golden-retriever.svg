@@ -1,0 +1,42 @@
+<svg width="250" height="200" viewBox="0 0 250 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Golden Retriever body -->
+  <ellipse cx="125" cy="140" rx="60" ry="35" fill="#D4A574" stroke="#B8956A" stroke-width="2"/>
+
+  <!-- Head -->
+  <circle cx="125" cy="80" r="35" fill="#E8BC7A" stroke="#B8956A" stroke-width="2"/>
+
+  <!-- Ears -->
+  <ellipse cx="105" cy="65" rx="12" ry="20" fill="#D4A574" stroke="#B8956A" stroke-width="1" transform="rotate(-20 105 65)"/>
+  <ellipse cx="145" cy="65" rx="12" ry="20" fill="#D4A574" stroke="#B8956A" stroke-width="1" transform="rotate(20 145 65)"/>
+
+  <!-- Eyes -->
+  <circle cx="115" cy="75" r="4" fill="#2C1810"/>
+  <circle cx="135" cy="75" r="4" fill="#2C1810"/>
+  <circle cx="117" cy="73" r="1" fill="#FFFFFF"/>
+  <circle cx="137" cy="73" r="1" fill="#FFFFFF"/>
+
+  <!-- Nose -->
+  <ellipse cx="125" cy="85" rx="3" ry="2" fill="#2C1810"/>
+
+  <!-- Mouth -->
+  <path d="M 120 90 Q 125 95 130 90" stroke="#2C1810" stroke-width="2" fill="none"/>
+
+  <!-- Legs -->
+  <rect x="95" y="165" width="8" height="25" fill="#D4A574" stroke="#B8956A" stroke-width="1"/>
+  <rect x="115" y="165" width="8" height="25" fill="#D4A574" stroke="#B8956A" stroke-width="1"/>
+  <rect x="135" y="165" width="8" height="25" fill="#D4A574" stroke="#B8956A" stroke-width="1"/>
+  <rect x="155" y="165" width="8" height="25" fill="#D4A574" stroke="#B8956A" stroke-width="1"/>
+
+  <!-- Paws -->
+  <ellipse cx="99" cy="192" rx="6" ry="4" fill="#B8956A"/>
+  <ellipse cx="119" cy="192" rx="6" ry="4" fill="#B8956A"/>
+  <ellipse cx="139" cy="192" rx="6" ry="4" fill="#B8956A"/>
+  <ellipse cx="159" cy="192" rx="6" ry="4" fill="#B8956A"/>
+
+  <!-- Tail -->
+  <ellipse cx="180" cy="130" rx="8" ry="25" fill="#D4A574" stroke="#B8956A" stroke-width="1" transform="rotate(30 180 130)"/>
+
+  <!-- Collar -->
+  <rect x="105" y="110" width="40" height="6" fill="#DC143C" rx="3"/>
+  <circle cx="125" cy="113" r="3" fill="#FFD700" stroke="#B8860B" stroke-width="1"/>
+</svg>
