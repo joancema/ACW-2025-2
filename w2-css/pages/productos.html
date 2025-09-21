@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetShop - Productos</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <h1>🐾 PetShop - Productos</h1>
+        <nav>
+            <ul>
+                <li><a href="../index.html">Dashboard</a></li>
+                <li><a href="productos.html">Productos</a></li>
+                <li><a href="mascotas.html">Mascotas</a></li>
+                <li><a href="login.html">Iniciar Sesión</a></li>
+                <li><a href="registro.html">Registrarse</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="products-main">
+        <h2>Catálogo de Productos</h2>
+
+        <aside>
+            <h3>Filtros</h3>
+            <form>
+                <fieldset>
+                    <legend>Categorías</legend>
+                    <label><input type="checkbox" name="categoria" value="alimento"> Alimentos</label><br>
+                    <label><input type="checkbox" name="categoria" value="juguetes"> Juguetes</label><br>
+                    <label><input type="checkbox" name="categoria" value="accesorios"> Accesorios</label><br>
+                    <label><input type="checkbox" name="categoria" value="higiene"> Higiene</label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Precio</legend>
+                    <label>Mínimo: <input type="number" name="precio_min" min="0" placeholder="0"></label><br>
+                    <label>Máximo: <input type="number" name="precio_max" min="0" placeholder="1000"></label>
+                </fieldset>
+
+                <button type="submit">Filtrar</button>
+            </form>
+        </aside>
+
+        <section class="products-section">
+            <h3>Productos Disponibles</h3>
+            <div class="products-grid">
+            <article class="product-card">
+                <h4>Alimento Premium para Perros</h4>
+                <img src="../assets/images/products/alimento-perro.jpg" alt="Alimento premium para perros adultos" width="200" height="150">
+                <p><strong>Precio:</strong> $45.99</p>
+                <p><strong>Categoría:</strong> Alimentos</p>
+                <p><strong>Descripción:</strong> Alimento balanceado para perros adultos con proteínas de alta calidad.</p>
+                <p><strong>Stock:</strong> 25 unidades</p>
+                <button type="button">Agregar al Carrito</button>
+            </article>
+
+            <article class="product-card">
+                <h4>Pelota de Goma para Perros</h4>
+                <img src="../assets/images/products/pelota-goma.jpg" alt="Pelota de goma resistente para perros" width="200" height="150">
+                <p><strong>Precio:</strong> $12.50</p>
+                <p><strong>Categoría:</strong> Juguetes</p>
+                <p><strong>Descripción:</strong> Pelota resistente ideal para juegos y ejercicio.</p>
+                <p><strong>Stock:</strong> 15 unidades</p>
+                <button type="button">Agregar al Carrito</button>
+            </article>
+
+            <article class="product-card">
+                <h4>Collar Ajustable para Gatos</h4>
+                <img src="../assets/images/products/collar-gato.jpg" alt="Collar ajustable con cascabel para gatos" width="200" height="150">
+                <p><strong>Precio:</strong> $8.99</p>
+                <p><strong>Categoría:</strong> Accesorios</p>
+                <p><strong>Descripción:</strong> Collar suave y ajustable con cascabel para gatos.</p>
+                <p><strong>Stock:</strong> 30 unidades</p>
+                <button type="button">Agregar al Carrito</button>
+            </article>
+
+            <article class="product-card">
+                <h4>Shampoo Antipulgas</h4>
+                <img src="../assets/images/products/shampoo.jpg" alt="Shampoo antipulgas para perros y gatos" width="200" height="150">
+                <p><strong>Precio:</strong> $18.75</p>
+                <p><strong>Categoría:</strong> Higiene</p>
+                <p><strong>Descripción:</strong> Shampoo especial contra pulgas y garrapatas.</p>
+                <p><strong>Stock:</strong> 12 unidades</p>
+                <button type="button">Agregar al Carrito</button>
+            </article>
+
+            <article class="product-card">
+                <h4>Cama Ortopédica para Perros</h4>
+                <img src="../assets/images/products/cama-perro.jpg" alt="Cama ortopédica grande para perros" width="200" height="150">
+                <p><strong>Precio:</strong> $89.99</p>
+                <p><strong>Categoría:</strong> Accesorios</p>
+                <p><strong>Descripción:</strong> Cama ortopédica con memory foam para perros grandes.</p>
+                <p><strong>Stock:</strong> 5 unidades</p>
+                <button type="button">Agregar al Carrito</button>
+            </article>
+
+            <article class="product-card">
+                <h4>Arena para Gatos</h4>
+                <img src="../assets/images/products/arena-gato.jpg" alt="Arena aglutinante para gatos" width="200" height="150">
+                <p><strong>Precio:</strong> $22.50</p>
+                <p><strong>Categoría:</strong> Higiene</p>
+                <p><strong>Descripción:</strong> Arena aglutinante con control de olores.</p>
+                <p><strong>Stock:</strong> 20 unidades</p>
+                <button type="button">Agregar al Carrito</button>
+            </article>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 PetShop. Todos los derechos reservados.</p>
+        <address>
+            <p>📍 Dirección: Av. Principal 123, Ciudad</p>
+            <p>📞 Teléfono: (555) 123-4567</p>
+            <p>✉️ Email: contacto@petshop.com</p>
+        </address>
+    </footer>
+</body>
+</html>

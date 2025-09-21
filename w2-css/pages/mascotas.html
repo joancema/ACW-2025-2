@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetShop - Mascotas</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <h1>🐾 PetShop - Mascotas</h1>
+        <nav>
+            <ul>
+                <li><a href="../index.html">Dashboard</a></li>
+                <li><a href="productos.html">Productos</a></li>
+                <li><a href="mascotas.html">Mascotas</a></li>
+                <li><a href="login.html">Iniciar Sesión</a></li>
+                <li><a href="registro.html">Registrarse</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="pets-main">
+        <h2>Mascotas Disponibles para Adopción</h2>
+
+        <aside>
+            <h3>Búsqueda y Filtros</h3>
+            <form>
+                <fieldset>
+                    <legend>Tipo de Mascota</legend>
+                    <label><input type="radio" name="tipo" value="perro" checked> Perros</label><br>
+                    <label><input type="radio" name="tipo" value="gato"> Gatos</label><br>
+                    <label><input type="radio" name="tipo" value="otros"> Otros</label><br>
+                    <label><input type="radio" name="tipo" value="todos"> Todos</label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Edad</legend>
+                    <label><input type="checkbox" name="edad" value="cachorro"> Cachorro (0-1 año)</label><br>
+                    <label><input type="checkbox" name="edad" value="joven"> Joven (1-3 años)</label><br>
+                    <label><input type="checkbox" name="edad" value="adulto"> Adulto (3-7 años)</label><br>
+                    <label><input type="checkbox" name="edad" value="senior"> Senior (7+ años)</label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Tamaño</legend>
+                    <label>
+                        <select name="tamaño">
+                            <option value="">Cualquier tamaño</option>
+                            <option value="pequeño">Pequeño</option>
+                            <option value="mediano">Mediano</option>
+                            <option value="grande">Grande</option>
+                        </select>
+                    </label>
+                </fieldset>
+
+                <button type="submit">Buscar</button>
+            </form>
+        </aside>
+
+        <section class="pets-section">
+            <h3>Nuestras Mascotas</h3>
+            <div class="pets-grid">
+            <article class="pet-card">
+                <header>
+                    <h4>Max - Golden Retriever</h4>
+                </header>
+                <img src="../assets/images/pets/golden-retriever.jpg" alt="Max, Golden Retriever de 2 años" width="250" height="200">
+                <dl>
+                    <dt>Edad:</dt>
+                    <dd>2 años</dd>
+                    <dt>Tamaño:</dt>
+                    <dd>Grande</dd>
+                    <dt>Peso:</dt>
+                    <dd>28 kg</dd>
+                    <dt>Vacunas:</dt>
+                    <dd>Al día</dd>
+                    <dt>Esterilizado:</dt>
+                    <dd>Sí</dd>
+                </dl>
+                <p><strong>Personalidad:</strong> Muy amigable, le encanta jugar con niños y otros perros. Ideal para familias activas.</p>
+                <button type="button">Solicitar Adopción</button>
+            </article>
+
+            <article class="pet-card">
+                <header>
+                    <h4>Luna - Gata Persa</h4>
+                </header>
+                <img src="../assets/images/pets/gata-persa.jpg" alt="Luna, gata Persa de 3 años" width="250" height="200">
+                <dl>
+                    <dt>Edad:</dt>
+                    <dd>3 años</dd>
+                    <dt>Tamaño:</dt>
+                    <dd>Mediano</dd>
+                    <dt>Peso:</dt>
+                    <dd>4.5 kg</dd>
+                    <dt>Vacunas:</dt>
+                    <dd>Al día</dd>
+                    <dt>Esterilizada:</dt>
+                    <dd>Sí</dd>
+                </dl>
+                <p><strong>Personalidad:</strong> Tranquila y cariñosa. Le gusta estar en ambientes silenciosos y recibir mimos.</p>
+                <button type="button">Solicitar Adopción</button>
+            </article>
+
+            <article class="pet-card">
+                <header>
+                    <h4>Rocky - Pastor Alemán</h4>
+                </header>
+                <img src="../assets/images/pets/pastor-aleman.jpg" alt="Rocky, Pastor Alemán de 4 años" width="250" height="200">
+                <dl>
+                    <dt>Edad:</dt>
+                    <dd>4 años</dd>
+                    <dt>Tamaño:</dt>
+                    <dd>Grande</dd>
+                    <dt>Peso:</dt>
+                    <dd>35 kg</dd>
+                    <dt>Vacunas:</dt>
+                    <dd>Al día</dd>
+                    <dt>Esterilizado:</dt>
+                    <dd>Sí</dd>
+                </dl>
+                <p><strong>Personalidad:</strong> Inteligente y leal. Necesita ejercicio diario y una familia comprometida con su entrenamiento.</p>
+                <button type="button">Solicitar Adopción</button>
+            </article>
+
+            <article class="pet-card">
+                <header>
+                    <h4>Mimi - Gata Siamesa</h4>
+                </header>
+                <img src="../assets/images/pets/gata-siamesa.jpg" alt="Mimi, gata Siamesa de 1 año" width="250" height="200">
+                <dl>
+                    <dt>Edad:</dt>
+                    <dd>1 año</dd>
+                    <dt>Tamaño:</dt>
+                    <dd>Pequeño</dd>
+                    <dt>Peso:</dt>
+                    <dd>3.2 kg</dd>
+                    <dt>Vacunas:</dt>
+                    <dd>Al día</dd>
+                    <dt>Esterilizada:</dt>
+                    <dd>Sí</dd>
+                </dl>
+                <p><strong>Personalidad:</strong> Muy activa y vocal. Le encanta la atención y es muy juguetona.</p>
+                <button type="button">Solicitar Adopción</button>
+            </article>
+
+            <article class="pet-card">
+                <header>
+                    <h4>Buddy - Labrador Chocolate</h4>
+                </header>
+                <img src="../assets/images/pets/labrador-chocolate.jpg" alt="Buddy, Labrador Chocolate de 6 meses" width="250" height="200">
+                <dl>
+                    <dt>Edad:</dt>
+                    <dd>6 meses</dd>
+                    <dt>Tamaño:</dt>
+                    <dd>Mediano (creciendo)</dd>
+                    <dt>Peso:</dt>
+                    <dd>15 kg</dd>
+                    <dt>Vacunas:</dt>
+                    <dd>En proceso</dd>
+                    <dt>Esterilizado:</dt>
+                    <dd>Pendiente</dd>
+                </dl>
+                <p><strong>Personalidad:</strong> Cachorro enérgico y muy sociable. Necesita entrenamiento básico y mucho amor.</p>
+                <button type="button">Solicitar Adopción</button>
+            </article>
+            </div>
+        </section>
+
+        <section class="process-section">
+            <h3>Proceso de Adopción</h3>
+            <ol>
+                <li>Completa el <a href="registro.html">formulario de registro</a></li>
+                <li>Programa una visita para conocer a la mascota</li>
+                <li>Entrevista con nuestro equipo de adopciones</li>
+                <li>Período de prueba de 1 semana</li>
+                <li>Adopción final y documentación</li>
+            </ol>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 PetShop. Todos los derechos reservados.</p>
+        <address>
+            <p>📍 Dirección: Av. Principal 123, Ciudad</p>
+            <p>📞 Teléfono: (555) 123-4567</p>
+            <p>✉️ Email: contacto@petshop.com</p>
+        </address>
+    </footer>
+</body>
+</html>

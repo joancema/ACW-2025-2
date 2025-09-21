@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetShop - Iniciar Sesión</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <h1>🐾 PetShop - Iniciar Sesión</h1>
+        <nav>
+            <ul>
+                <li><a href="../index.html">Dashboard</a></li>
+                <li><a href="productos.html">Productos</a></li>
+                <li><a href="mascotas.html">Mascotas</a></li>
+                <li><a href="login.html">Iniciar Sesión</a></li>
+                <li><a href="registro.html">Registrarse</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="form-main">
+        <h2>Acceder a tu Cuenta</h2>
+        <div class="form-container login-form">
+            <form action="#" method="post">
+                <fieldset>
+                    <legend>Datos de Acceso</legend>
+
+                    <p>
+                        <label for="email">Correo Electrónico:</label><br>
+                        <input type="email"
+                               id="email"
+                               name="email"
+                               required
+                               placeholder="tu@email.com"
+                               autocomplete="email">
+                    </p>
+
+                    <p>
+                        <label for="password">Contraseña:</label><br>
+                        <input type="password"
+                               id="password"
+                               name="password"
+                               required
+                               minlength="6"
+                               autocomplete="current-password">
+                    </p>
+
+                    <p>
+                        <label>
+                            <input type="checkbox" name="recordar">
+                            Recordar mis datos
+                        </label>
+                    </p>
+
+                    <p>
+                        <button type="submit">Iniciar Sesión</button>
+                        <button type="reset">Limpiar</button>
+                    </p>
+                </fieldset>
+            </form>
+
+            <aside>
+                <h3>¿Problemas para acceder?</h3>
+                <ul>
+                    <li><a href="#recuperar">¿Olvidaste tu contraseña?</a></li>
+                    <li><a href="registro.html">¿No tienes cuenta? Regístrate aquí</a></li>
+                    <li><a href="#ayuda">Centro de ayuda</a></li>
+                </ul>
+            </aside>
+        </div>
+
+        <section id="recuperar">
+            <h3>Recuperar Contraseña</h3>
+            <p>Si has olvidado tu contraseña, ingresa tu correo electrónico y te enviaremos instrucciones para restablecerla.</p>
+
+            <form action="#" method="post">
+                <fieldset>
+                    <legend>Recuperación de Contraseña</legend>
+
+                    <p>
+                        <label for="email-recuperar">Correo Electrónico:</label><br>
+                        <input type="email"
+                               id="email-recuperar"
+                               name="email-recuperar"
+                               required
+                               placeholder="tu@email.com">
+                    </p>
+
+                    <p>
+                        <button type="submit">Enviar Instrucciones</button>
+                    </p>
+                </fieldset>
+            </form>
+        </section>
+
+        <section>
+            <h3>Información de Seguridad</h3>
+            <details>
+                <summary>Consejos de Seguridad</summary>
+                <ul>
+                    <li>Nunca compartas tu contraseña con otras personas</li>
+                    <li>Usa una contraseña única para esta cuenta</li>
+                    <li>Cierra sesión al usar computadoras públicas</li>
+                    <li>Mantén tu navegador actualizado</li>
+                </ul>
+            </details>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 PetShop. Todos los derechos reservados.</p>
+        <address>
+            <p>📍 Dirección: Av. Principal 123, Ciudad</p>
+            <p>📞 Teléfono: (555) 123-4567</p>
+            <p>✉️ Email: contacto@petshop.com</p>
+        </address>
+    </footer>
+</body>
+</html>
