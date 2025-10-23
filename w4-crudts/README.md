@@ -377,7 +377,8 @@ Vite genera un archivo `main.ts` con código de ejemplo. Vamos a reemplazarlo co
 
 ```typescript
 import './style.css'
-import { supabase, Pet } from './supabase'
+import { supabase } from './supabase'
+import type { Pet } from './supabase'
 
 // Variables globales
 let editingPet: Pet | null = null

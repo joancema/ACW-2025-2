@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🐾 Gestión de Mascotas</title>
+</head>
+<body>
+  <div id="app">
+    <div class="container">
+      <h1>🐾 Gestión de Mascotas</h1>
+      
+      <!-- Formulario -->
+      <div class="card">
+        <h2>Agregar/Editar Mascota</h2>
+        <form id="pet-form">
+          <input type="hidden" id="pet-id">
+          <input type="text" id="name" placeholder="Nombre" required>
+          <input type="text" id="breed" placeholder="Raza">
+          <input type="number" id="age" placeholder="Edad" min="0">
+          <div class="buttons">
+            <button type="submit">Guardar</button>
+            <button type="button" id="cancel-btn">Cancelar</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Lista de mascotas -->
+      <div class="card">
+        <h2>Lista de Mascotas</h2>
+        <div id="pets-list"></div>
+      </div>
+    </div>
+  </div>
+  
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
