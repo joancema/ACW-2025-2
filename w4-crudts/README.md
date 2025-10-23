@@ -1,25 +1,27 @@
-# 📚 CRUD Simple con TypeScript y Supabase - Tutorial 90 Minutos
+# 🐾 CRUD Simple con TypeScript y Supabase - Tutorial 90 Minutos
 
 ## 🎯 Objetivo
-Crear un CRUD funcional en **90 minutos** con TypeScript, Vite y Supabase. Versión súper simplificada para aprender los conceptos básicos.
+Crear un CRUD funcional en **90 minutos** con TypeScript, Vite y Supabase para gestionar mascotas. Partiendo de un proyecto Vite ya configurado.
 
 ## 📋 Requisitos Previos
-- Node.js instalado
+- Node.js instalado (v18 o superior)
 - Cuenta en [Supabase](https://supabase.com) (gratis)
 - Editor de código (VS Code recomendado)
 
 ## 📁 Estructura del Proyecto
 ```
-crud-simple/
+crud-pets/
+├── public/              # Archivos estáticos (generado por Vite)
 ├── src/
-│   ├── supabase.ts    # Configuración de Supabase
-│   ├── main.ts        # Toda la lógica
-│   └── style.css      # Estilos mínimos
-├── index.html         # HTML principal
-├── package.json       # Dependencias
-├── tsconfig.json      # Config TypeScript
-├── vite.config.ts     # Config Vite
-└── .env              # Variables de entorno
+│   ├── supabase.ts     # Configuración de Supabase
+│   ├── main.ts         # Lógica principal de la app
+│   ├── style.css       # Estilos de la aplicación
+│   └── vite-env.d.ts   # Tipos de Vite (generado)
+├── index.html          # HTML principal
+├── package.json        # Dependencias
+├── tsconfig.json       # Config TypeScript (generado por Vite)
+├── vite.config.ts      # Config Vite (opcional)
+└── .env               # Variables de entorno
 ```
 
 ---
@@ -28,176 +30,192 @@ crud-simple/
 
 | Tiempo | Tarea |
 |--------|-------|
-| 0-10 min | Configuración inicial y archivos base |
-| 10-20 min | Configurar Supabase |
-| 20-30 min | Escribir HTML |
-| 30-40 min | Escribir CSS |
-| 40-60 min | Escribir lógica TypeScript |
-| 60-85 min | Probar y depurar |
-| 85-90 min | Ajustes finales |
+| 0-5 min | Crear proyecto con Vite |
+| 5-15 min | Configurar Supabase (crear tabla y políticas) |
+| 15-20 min | Instalar Supabase y configurar cliente |
+| 20-25 min | Modificar HTML (solo 3 inputs) |
+| 25-35 min | Actualizar CSS (minimalista) |
+| 35-70 min | Escribir lógica TypeScript (CRUD simplificado) |
+| 70-90 min | Probar, depurar y ajustes finales |
 
 ---
 
-## 🚀 PASO 1: CONFIGURACIÓN INICIAL (0-10 min)
+## 🚀 PASO 1: CREAR PROYECTO CON VITE (0-5 min)
 
-### 1.1 Crear estructura de carpetas
+### 1.1 Crear proyecto usando el template de Vite
 ```bash
-mkdir crud-simple
-cd crud-simple
-mkdir src
-```
-
-### 1.2 Crear archivo: `package.json`
-```json
-{
-  "name": "crud-simple",
-  "version": "1.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite"
-  },
-  "dependencies": {
-    "@supabase/supabase-js": "^2.39.0"
-  },
-  "devDependencies": {
-    "typescript": "^5.2.2",
-    "vite": "^5.0.8"
-  }
-}
-```
-
-### 1.3 Crear archivo: `tsconfig.json`
-```json
-{
-  "compilerOptions": {
-    "target": "ES2020",
-    "module": "ESNext",
-    "lib": ["ES2020", "DOM"],
-    "skipLibCheck": true,
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "strict": true
-  },
-  "include": ["src"]
-}
-```
-
-### 1.4 Crear archivo: `vite.config.ts`
-```typescript
-import { defineConfig } from 'vite'
-
-export default defineConfig({
-  server: {
-    port: 3000
-  }
-})
-```
-
-### 1.5 Instalar dependencias
-```bash
+npm create vite@latest crud-pets -- --template vanilla-ts
+cd crud-pets
 npm install
 ```
 
+Esto genera automáticamente:
+- ✅ `package.json` con scripts configurados
+- ✅ `tsconfig.json` con configuración TypeScript optimizada
+- ✅ `index.html` con estructura básica
+- ✅ `src/main.ts` archivo principal
+- ✅ `src/style.css` estilos base
+- ✅ `src/vite-env.d.ts` tipos de Vite
+- ✅ `.gitignore` configurado correctamente
+- ✅ Configuración de Vite lista para usar
+
+### 1.2 Verificar que funciona
+```bash
+npm run dev
+```
+
+Deberías ver el proyecto corriendo en `http://localhost:5173` con un contador de ejemplo.
+
+### 1.3 Estructura inicial generada
+```
+crud-pets/
+├── node_modules/
+├── public/
+├── src/
+│   ├── counter.ts          # Ejemplo (puedes eliminar)
+│   ├── main.ts             # ⚠️ Lo modificaremos
+│   ├── style.css           # ⚠️ Lo modificaremos
+│   ├── typescript.svg      # Ejemplo (puedes eliminar)
+│   └── vite-env.d.ts       # Tipos de Vite
+├── .gitignore              # ✅ Ya configurado
+├── index.html              # ⚠️ Lo modificaremos
+├── package.json
+└── tsconfig.json
+```
+
 ---
 
-## 🗄️ PASO 2: CONFIGURAR SUPABASE (10-20 min)
+## 🗄️ PASO 2: CONFIGURAR SUPABASE (5-15 min)
 
 ### 2.1 Crear proyecto en Supabase
 1. Ir a [https://supabase.com](https://supabase.com)
 2. Crear cuenta/proyecto gratuito
-3. Guardar la **URL** y **ANON KEY** del proyecto
+3. Ir a **Settings → API**
+4. Copiar la **Project URL** y **anon public** key
 
-### 2.2 Crear archivo: `.env`
+---
+
+## 🗄️ PASO 2: CONFIGURAR SUPABASE (5-15 min)
+
+### 2.1 Crear proyecto en Supabase
+1. Ir a [https://supabase.com](https://supabase.com)
+2. Crear cuenta/proyecto gratuito
+3. Ir a **Settings → API**
+4. Copiar la **Project URL** y **anon public** key
+
+### 2.2 Instalar cliente de Supabase
+```bash
+npm install @supabase/supabase-js
+```
+
+### 2.3 Crear archivo `.env` en la raíz del proyecto
 ```env
 VITE_SUPABASE_URL=tu_url_aqui
 VITE_SUPABASE_ANON_KEY=tu_key_aqui
 ```
 
-### 2.3 Crear tabla en Supabase
+> **Nota:** Vite requiere el prefijo `VITE_` para que las variables sean accesibles en el cliente.
+
+> **⚠️ IMPORTANTE:** El template de Vite ya incluye `.env` en el `.gitignore`, así que tus credenciales NO se subirán a Git por error.
+
+### 2.4 Crear tabla en Supabase
 Ir al **SQL Editor** de Supabase y ejecutar:
 
 ```sql
--- Tabla SUPER SIMPLE - Solo 3 campos!
-CREATE TABLE tasks (
+-- Tabla de Mascotas - SUPER SIMPLE (solo 3 campos)
+CREATE TABLE pets (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  title VARCHAR(200) NOT NULL,
-  description TEXT,
+  name VARCHAR(100) NOT NULL,
+  breed VARCHAR(100),
+  age INTEGER,
   created_at TIMESTAMP DEFAULT NOW()
 );
 
 -- Habilitar acceso público (para desarrollo)
-ALTER TABLE tasks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE pets ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Acceso público" ON tasks 
+CREATE POLICY "Acceso público" ON pets 
 FOR ALL USING (true);
 
 -- Datos de ejemplo (opcional)
-INSERT INTO tasks (title, description) VALUES
-  ('Comprar pan', 'Ir a la panadería'),
-  ('Estudiar TypeScript', 'Repasar conceptos básicos'),
-  ('Hacer ejercicio', 'Salir a correr 30 minutos');
+INSERT INTO pets (name, breed, age) VALUES
+  ('Max', 'Labrador', 3),
+  ('Luna', 'Siamés', 2),
+  ('Rocky', 'Bulldog', 5),
+  ('Michi', 'Persa', 1);
 ```
 
 ---
 
-## 📄 PASO 3: CREAR HTML (20-30 min)
+## 📄 PASO 3: MODIFICAR HTML (15-25 min)
 
-### Crear archivo: `index.html`
+### 3.1 Reemplazar el contenido de `index.html`
+
+Vite genera un HTML básico, vamos a reemplazarlo completamente:
+
 ```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CRUD Simple</title>
-  <link rel="stylesheet" href="/src/style.css">
+  <title>🐾 Gestión de Mascotas</title>
 </head>
 <body>
-  <div class="container">
-    <h1>📝 CRUD Simple - Tareas</h1>
-    
-    <!-- Formulario -->
-    <div class="form-container">
-      <h2>Agregar/Editar Tarea</h2>
-      <form id="task-form">
-        <input type="hidden" id="task-id">
-        <input type="text" id="title" placeholder="Título" required>
-        <textarea id="description" placeholder="Descripción"></textarea>
-        <div class="buttons">
-          <button type="submit">Guardar</button>
-          <button type="button" id="cancel-btn">Cancelar</button>
-        </div>
-      </form>
-    </div>
+  <div id="app">
+    <div class="container">
+      <h1>🐾 Gestión de Mascotas</h1>
+      
+      <!-- Formulario -->
+      <div class="card">
+        <h2>Agregar/Editar Mascota</h2>
+        <form id="pet-form">
+          <input type="hidden" id="pet-id">
+          <input type="text" id="name" placeholder="Nombre" required>
+          <input type="text" id="breed" placeholder="Raza">
+          <input type="number" id="age" placeholder="Edad" min="0">
+          <div class="buttons">
+            <button type="submit">Guardar</button>
+            <button type="button" id="cancel-btn">Cancelar</button>
+          </div>
+        </form>
+      </div>
 
-    <!-- Lista de tareas -->
-    <div class="list-container">
-      <h2>Lista de Tareas</h2>
-      <div id="tasks-list">
-        <!-- Las tareas se cargarán aquí -->
+      <!-- Lista de mascotas -->
+      <div class="card">
+        <h2>Lista de Mascotas</h2>
+        <div id="pets-list"></div>
       </div>
     </div>
   </div>
-
+  
   <script type="module" src="/src/main.ts"></script>
 </body>
 </html>
 ```
 
+> **Nota:** Mantén la línea `<script type="module" src="/src/main.ts"></script>` que viene por defecto en Vite.
+
 ---
 
-## 🎨 PASO 4: CREAR CSS (30-40 min)
+## 🎨 PASO 4: ACTUALIZAR CSS (25-35 min)
 
-### Crear archivo: `src/style.css`
+### 4.1 Reemplazar el contenido de `src/style.css`
+
+CSS minimalista - solo lo esencial:
+
 ```css
-/* CSS SUPER SIMPLE - Solo lo esencial */
-body {
-  font-family: Arial, sans-serif;
+/* Reset básico */
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  background: #f5f5f5;
   padding: 20px;
-  background: #f0f0f0;
 }
 
 .container {
@@ -206,111 +224,169 @@ body {
 }
 
 h1 {
+  text-align: center;
+  margin-bottom: 30px;
   color: #333;
 }
 
-.form-container, .list-container {
-  background: white;
-  padding: 20px;
-  margin: 20px 0;
-  border-radius: 5px;
+h2 {
+  margin-bottom: 15px;
+  color: #555;
+  font-size: 1.2em;
 }
 
+/* Tarjetas */
+.card {
+  background: white;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Formulario */
 form {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-input, textarea, button {
+input {
   padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
   font-size: 16px;
 }
 
+input:focus {
+  outline: none;
+  border-color: #4CAF50;
+}
+
+/* Botones */
 .buttons {
   display: flex;
   gap: 10px;
 }
 
 button {
-  background: #007bff;
-  color: white;
+  padding: 10px 20px;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
-  border-radius: 3px;
+  font-size: 16px;
+  flex: 1;
 }
 
-button:hover {
-  background: #0056b3;
+button[type="submit"] {
+  background: #4CAF50;
+  color: white;
 }
 
-.task-item {
+button[type="submit"]:hover {
+  background: #45a049;
+}
+
+#cancel-btn {
+  background: #f0f0f0;
+  color: #333;
+}
+
+#cancel-btn:hover {
+  background: #e0e0e0;
+}
+
+/* Lista de mascotas */
+.pet-item {
   padding: 15px;
   margin: 10px 0;
-  background: #f8f9fa;
-  border-left: 3px solid #007bff;
+  background: #fafafa;
+  border-left: 3px solid #4CAF50;
+  border-radius: 4px;
 }
 
-.task-title {
-  font-weight: bold;
-  margin-bottom: 5px;
+.pet-item strong {
+  color: #333;
 }
 
-.task-description {
-  color: #666;
-  margin-bottom: 10px;
-}
-
-.task-actions {
+.pet-actions {
   display: flex;
   gap: 10px;
+  margin-top: 10px;
 }
 
 .btn-edit {
-  background: #28a745;
+  background: #2196F3;
+  color: white;
+}
+
+.btn-edit:hover {
+  background: #0b7dda;
 }
 
 .btn-delete {
-  background: #dc3545;
+  background: #f44336;
+  color: white;
+}
+
+.btn-delete:hover {
+  background: #da190b;
+}
+
+.empty {
+  text-align: center;
+  color: #999;
+  padding: 20px;
 }
 ```
 
 ---
 
-## 💻 PASO 5: CREAR LÓGICA TYPESCRIPT (40-60 min)
+## 💻 PASO 5: CREAR LÓGICA TYPESCRIPT (35-75 min)
 
-### 5.1 Crear archivo: `src/supabase.ts`
+### 5.1 Crear archivo **nuevo**: `src/supabase.ts`
+
+Este archivo no existe en el template de Vite, debemos crearlo:
+
 ```typescript
-// Configuración SIMPLE de Supabase
+// Configuración del cliente de Supabase
 import { createClient } from '@supabase/supabase-js'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error('Faltan las credenciales de Supabase en el archivo .env')
+}
+
 export const supabase = createClient(supabaseUrl, supabaseKey)
 
-// Tipo simple para Tarea
-export interface Task {
+// Tipo para Mascota (solo 3 campos)
+export interface Pet {
   id?: string
-  title: string
-  description?: string
+  name: string
+  breed?: string
+  age?: number
   created_at?: string
 }
 ```
 
-### 5.2 Crear archivo: `src/main.ts`
+### 5.2 Reemplazar completamente `src/main.ts`
+
+Vite genera un archivo `main.ts` con código de ejemplo. Vamos a reemplazarlo con nuestra lógica:
+
 ```typescript
-// TODA la lógica en un solo archivo
-import { supabase, Task } from './supabase'
+import './style.css'
+import { supabase, Pet } from './supabase'
 
 // Variables globales
-let editingTask: Task | null = null
-const form = document.getElementById('task-form') as HTMLFormElement
-const tasksList = document.getElementById('tasks-list') as HTMLDivElement
+let editingPet: Pet | null = null
+const form = document.getElementById('pet-form') as HTMLFormElement
+const petsList = document.getElementById('pets-list') as HTMLDivElement
 const cancelBtn = document.getElementById('cancel-btn') as HTMLButtonElement
 
-// Cargar tareas al iniciar
-loadTasks()
+// Cargar mascotas al iniciar
+loadPets()
 
 // Event Listeners
 form.addEventListener('submit', handleSubmit)
@@ -318,37 +394,40 @@ cancelBtn.addEventListener('click', resetForm)
 
 // FUNCIONES PRINCIPALES
 
-async function loadTasks() {
-  console.log('Cargando tareas...')
+async function loadPets() {
+  console.log('Cargando mascotas...')
   
   const { data, error } = await supabase
-    .from('tasks')
+    .from('pets')
     .select('*')
     .order('created_at', { ascending: false })
   
   if (error) {
     console.error('Error:', error)
-    tasksList.innerHTML = '<p>Error al cargar tareas</p>'
+    petsList.innerHTML = '<p class="empty">Error al cargar mascotas</p>'
     return
   }
   
-  console.log('Tareas cargadas:', data)
-  displayTasks(data || [])
+  console.log('Mascotas cargadas:', data)
+  displayPets(data || [])
 }
 
-function displayTasks(tasks: Task[]) {
-  if (tasks.length === 0) {
-    tasksList.innerHTML = '<p>No hay tareas</p>'
+function displayPets(pets: Pet[]) {
+  if (pets.length === 0) {
+    petsList.innerHTML = '<p class="empty">No hay mascotas registradas</p>'
     return
   }
   
-  tasksList.innerHTML = tasks.map(task => `
-    <div class="task-item">
-      <div class="task-title">${task.title}</div>
-      <div class="task-description">${task.description || 'Sin descripción'}</div>
-      <div class="task-actions">
-        <button class="btn-edit" onclick="editTask('${task.id}')">Editar</button>
-        <button class="btn-delete" onclick="deleteTask('${task.id}')">Eliminar</button>
+  petsList.innerHTML = pets.map(pet => `
+    <div class="pet-item">
+      <div>
+        <strong>${pet.name}</strong>
+        ${pet.breed ? ` - ${pet.breed}` : ''}
+        ${pet.age ? ` (${pet.age} años)` : ''}
+      </div>
+      <div class="pet-actions">
+        <button class="btn-edit" onclick="editPet('${pet.id}')">Editar</button>
+        <button class="btn-delete" onclick="deletePet('${pet.id}')">Eliminar</button>
       </div>
     </div>
   `).join('')
@@ -357,92 +436,105 @@ function displayTasks(tasks: Task[]) {
 async function handleSubmit(e: Event) {
   e.preventDefault()
   
-  const title = (document.getElementById('title') as HTMLInputElement).value
-  const description = (document.getElementById('description') as HTMLTextAreaElement).value
+  const name = (document.getElementById('name') as HTMLInputElement).value
+  const breed = (document.getElementById('breed') as HTMLInputElement).value
+  const ageInput = (document.getElementById('age') as HTMLInputElement).value
+  const age = ageInput ? parseInt(ageInput) : undefined
   
-  const taskData: Task = { title, description }
+  const petData: Pet = { 
+    name, 
+    breed: breed || undefined,
+    age
+  }
   
-  console.log('Guardando:', taskData)
+  console.log('Guardando mascota:', petData)
   
   let result
   
-  if (editingTask?.id) {
+  if (editingPet?.id) {
     // Actualizar
     result = await supabase
-      .from('tasks')
-      .update(taskData)
-      .eq('id', editingTask.id)
+      .from('pets')
+      .update(petData)
+      .eq('id', editingPet.id)
     
-    console.log('Tarea actualizada')
+    console.log('Mascota actualizada')
   } else {
     // Crear
     result = await supabase
-      .from('tasks')
-      .insert([taskData])
+      .from('pets')
+      .insert([petData])
     
-    console.log('Tarea creada')
+    console.log('Mascota creada')
   }
   
   if (result.error) {
     console.error('Error:', result.error)
+    alert('Error al guardar la mascota')
     return
   }
   
   resetForm()
-  loadTasks()
+  loadPets()
 }
 
 function resetForm() {
   form.reset()
-  editingTask = null
-  ;(document.getElementById('task-id') as HTMLInputElement).value = ''
+  editingPet = null
+  ;(document.getElementById('pet-id') as HTMLInputElement).value = ''
   console.log('Formulario reseteado')
 }
 
-// Funciones globales (las más simple posible)
-(window as any).editTask = async (id: string) => {
-  console.log('Editando tarea:', id)
+// Funciones globales (accesibles desde los botones del HTML)
+(window as any).editPet = async (id: string) => {
+  console.log('Editando mascota:', id)
   
   const { data, error } = await supabase
-    .from('tasks')
+    .from('pets')
     .select('*')
     .eq('id', id)
     .single()
   
   if (error) {
     console.error('Error:', error)
+    alert('Error al cargar la mascota')
     return
   }
   
-  editingTask = data
-  ;(document.getElementById('task-id') as HTMLInputElement).value = id
-  ;(document.getElementById('title') as HTMLInputElement).value = data.title
-  ;(document.getElementById('description') as HTMLTextAreaElement).value = data.description || ''
+  editingPet = data
+  ;(document.getElementById('pet-id') as HTMLInputElement).value = id
+  ;(document.getElementById('name') as HTMLInputElement).value = data.name
+  ;(document.getElementById('breed') as HTMLInputElement).value = data.breed || ''
+  ;(document.getElementById('age') as HTMLInputElement).value = data.age?.toString() || ''
+  
+  // Scroll al formulario
+  window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
-(window as any).deleteTask = async (id: string) => {
-  if (!confirm('¿Eliminar tarea?')) return
+(window as any).deletePet = async (id: string) => {
+  if (!confirm('¿Eliminar esta mascota?')) return
   
-  console.log('Eliminando tarea:', id)
+  console.log('Eliminando mascota:', id)
   
   const { error } = await supabase
-    .from('tasks')
+    .from('pets')
     .delete()
     .eq('id', id)
   
   if (error) {
     console.error('Error:', error)
+    alert('Error al eliminar la mascota')
     return
   }
   
-  console.log('Tarea eliminada')
-  loadTasks()
+  console.log('Mascota eliminada')
+  loadPets()
 }
 ```
 
 ---
 
-## ✅ PASO 6: PROBAR LA APLICACIÓN (60-85 min)
+## ✅ PASO 6: PROBAR LA APLICACIÓN (75-90 min)
 
 ### 6.1 Ejecutar el proyecto
 ```bash
@@ -450,15 +542,24 @@ npm run dev
 ```
 
 ### 6.2 Abrir en el navegador
-- Ir a `http://localhost:3000`
+- Ir a `http://localhost:5173` (puerto por defecto de Vite)
 - Abrir la consola del navegador (F12)
 
 ### 6.3 Probar funcionalidades
-1. ✅ Crear una tarea nueva
-2. ✅ Ver lista de tareas
-3. ✅ Editar una tarea
-4. ✅ Eliminar una tarea
-5. ✅ Verificar logs en consola
+1. ✅ Crear una mascota nueva
+2. ✅ Ver lista de mascotas cargadas desde Supabase
+3. ✅ Editar una mascota existente
+4. ✅ Eliminar una mascota
+5. ✅ Verificar que los campos opcionales funcionen correctamente
+6. ✅ Verificar logs en consola para detectar errores
+
+### 6.4 Checklist de funcionamiento
+- [ ] El formulario se envía correctamente
+- [ ] Las mascotas se muestran en la lista
+- [ ] El botón editar carga los datos en el formulario
+- [ ] El botón eliminar pide confirmación
+- [ ] El botón cancelar limpia el formulario
+- [ ] Los datos se reflejan en Supabase
 
 ---
 
@@ -466,30 +567,45 @@ npm run dev
 
 ### Error: "Failed to fetch"
 - Verificar que las credenciales en `.env` sean correctas
-- Verificar que la tabla `tasks` exista en Supabase
+- Verificar que la URL de Supabase no tenga espacios extras
+- Reiniciar el servidor de desarrollo (`npm run dev`)
 
-### Error: "Table 'tasks' not found"
-- Ejecutar el script SQL en Supabase
+### Error: "Table 'pets' not found"
+- Ejecutar el script SQL completo en Supabase
 - Verificar que las políticas RLS estén activas
+- Refrescar la página del SQL Editor
 
-### Las tareas no se muestran
-- Verificar la consola del navegador
-- Verificar que haya datos en la tabla
+### Las mascotas no se muestran
+- Abrir la consola del navegador (F12)
+- Verificar si hay errores en rojo
+- Verificar que haya datos en la tabla de Supabase
+- Comprobar que las credenciales sean correctas
+
+### El formulario no se envía
+- Verificar que todos los campos requeridos estén llenos
+- Revisar la consola para ver mensajes de error
+- Verificar la conexión a Internet
 
 ---
 
 ## 📝 RESUMEN DE ARCHIVOS
 
-Total: **8 archivos** (incluyendo `.env`)
+### Archivos generados automáticamente por Vite:
+- `package.json` - Configuración del proyecto
+- `tsconfig.json` - Configuración TypeScript
+- `index.html` - Estructura HTML (modificado por ti)
+- `src/style.css` - Estilos (modificado por ti)
+- `src/main.ts` - Lógica principal (modificado por ti)
+- `src/vite-env.d.ts` - Tipos de Vite
 
-1. `package.json` - Configuración del proyecto
-2. `tsconfig.json` - Configuración TypeScript
-3. `vite.config.ts` - Configuración Vite
-4. `.env` - Variables de entorno
-5. `index.html` - Estructura HTML
-6. `src/style.css` - Estilos básicos
-7. `src/supabase.ts` - Configuración Supabase
-8. `src/main.ts` - Toda la lógica
+### Archivos que TÚ creas:
+- `.env` - Variables de entorno (credenciales Supabase) ⚠️ No subir a Git
+- `src/supabase.ts` - Cliente y tipos de Supabase
+
+### Total: 
+- **6 archivos generados por Vite** (3 los modificas)
+- **2 archivos nuevos** que tú creas
+- **1 tabla en Supabase**
 
 ---
 
@@ -497,34 +613,54 @@ Total: **8 archivos** (incluyendo `.env`)
 
 - ✅ Configuración de TypeScript con Vite
 - ✅ Conexión con Supabase
-- ✅ Operaciones CRUD básicas
-- ✅ Async/Await
+- ✅ Operaciones CRUD completas (Create, Read, Update, Delete)
+- ✅ Async/Await para operaciones asíncronas
 - ✅ Manejo del DOM con TypeScript
-- ✅ Tipos e interfaces básicas
+- ✅ Tipos e interfaces en TypeScript
+- ✅ Validación de formularios HTML5
+- ✅ Políticas de seguridad RLS en Supabase
 
 ---
 
 ## 🚀 SIGUIENTES PASOS (Después de los 90 minutos)
 
-Una vez que funcione esta versión simple, puedes agregar:
+Una vez que funcione esta versión, puedes mejorarla agregando:
 
-1. Validaciones de formulario
-2. Mejores estilos CSS
-3. Notificaciones visuales
-4. Modales personalizados
-5. Paginación
-6. Búsqueda y filtros
-7. Autenticación de usuarios
+### Funcionalidades
+1. **Búsqueda y filtros** - Buscar mascotas por nombre o especie
+2. **Imágenes** - Añadir fotos de las mascotas
+3. **Categorías** - Organizar por tipo de mascota
+4. **Historial médico** - Registrar vacunas y visitas al veterinario
+5. **Dueños** - Asociar mascotas con sus propietarios
+
+### Mejoras técnicas
+6. **Autenticación** - Login de usuarios con Supabase Auth
+7. **Validaciones avanzadas** - Validar edad, nombre, etc.
+8. **Notificaciones toast** - Mensajes visuales de éxito/error
+9. **Modales** - Ventanas emergentes para confirmaciones
+10. **Paginación** - Cargar mascotas en páginas
+11. **Modo oscuro** - Tema claro/oscuro
+12. **Responsive mejorado** - Optimizar para móviles
 
 ---
 
 ## 💡 TIPS FINALES
 
-- **Mantén la consola abierta** para ver los logs
-- **Guarda frecuentemente** (Ctrl+S)
-- **Prueba cada función** después de escribirla
-- **No te compliques** - primero hazlo funcionar, luego mejóralo
+- **Mantén la consola abierta** - Te ayudará a detectar errores rápidamente
+- **Guarda frecuentemente** - Usa Ctrl+S después de cada cambio
+- **Prueba paso a paso** - No esperes al final para probar todo
+- **Lee los mensajes de error** - La consola te dice exactamente qué falló
+- **Comienza simple** - Primero hazlo funcionar, luego hazlo bonito
+- **Usa los datos de ejemplo** - Te ayudarán a visualizar cómo se ve la app
 
 ---
 
-¡Listo! Sigue este README paso a paso y tendrás tu CRUD funcionando en 90 minutos. 🎉
+## 📚 Recursos Adicionales
+
+- [Documentación de Supabase](https://supabase.com/docs)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+- [Guía de Vite](https://vitejs.dev/guide/)
+
+---
+
+¡Listo! Sigue este README paso a paso y tendrás tu sistema de gestión de mascotas funcionando en 90 minutos. 🐾✨
