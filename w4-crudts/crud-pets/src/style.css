@@ -1,20 +1,28 @@
+/* PASO 1️⃣: RESETEO GENERAL DE ESTILOS */
+/* Elimina márgenes y paddings por defecto y aplica box-sizing para control total de dimensiones */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* PASO 2️⃣: ESTILOS GENERALES DEL BODY */
+/* Define tipografía base, color de fondo y espacio general */
 body {
   font-family: system-ui, sans-serif;
   background: #f5f5f5;
   padding: 20px;
 }
 
+/* PASO 3️⃣: CONTENEDOR PRINCIPAL */
+/* Centra el contenido y limita el ancho máximo */
 .container {
   max-width: 800px;
   margin: 0 auto;
 }
 
+/* PASO 4️⃣: TÍTULOS PRINCIPALES Y SECUNDARIOS */
+/* Ajusta márgenes, colores y tamaños para jerarquía visual */
 h1 {
   text-align: center;
   margin-bottom: 30px;
@@ -27,7 +35,8 @@ h2 {
   font-size: 1.2em;
 }
 
-/* Tarjetas */
+/* PASO 5️⃣: TARJETAS (CARDS) */
+/* Caja blanca con sombra y bordes redondeados para separar secciones */
 .card {
   background: white;
   padding: 20px;
@@ -36,13 +45,15 @@ h2 {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* Formulario */
+/* PASO 6️⃣: FORMULARIO Y CAMPOS */
+/* Usa flexbox en columna con separación entre inputs */
 form {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
+/* Estilo de los inputs */
 input {
   padding: 10px;
   border: 1px solid #ddd;
@@ -50,26 +61,30 @@ input {
   font-size: 16px;
 }
 
+/* Efecto visual al enfocar un input */
 input:focus {
   outline: none;
   border-color: #4CAF50;
 }
 
-/* Botones */
+/* PASO 7️⃣: BOTONES */
+/* Flexbox para alinearlos lado a lado */
 .buttons {
   display: flex;
   gap: 10px;
 }
 
+/* Estilo general de los botones */
 button {
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
-  flex: 1;
+  flex: 1; /* Hace que ambos botones tengan el mismo tamaño */
 }
 
+/* Botón principal (Guardar) */
 button[type="submit"] {
   background: #4CAF50;
   color: white;
@@ -79,6 +94,7 @@ button[type="submit"]:hover {
   background: #45a049;
 }
 
+/* Botón de cancelar */
 #cancel-btn {
   background: #f0f0f0;
   color: #333;
@@ -88,7 +104,8 @@ button[type="submit"]:hover {
   background: #e0e0e0;
 }
 
-/* Lista de mascotas */
+/* PASO 8️⃣: LISTA DE MASCOTAS */
+/* Cada item tiene borde verde y fondo gris claro */
 .pet-item {
   padding: 15px;
   margin: 10px 0;
@@ -97,16 +114,20 @@ button[type="submit"]:hover {
   border-radius: 4px;
 }
 
+/* Texto del nombre de la mascota */
 .pet-item strong {
   color: #333;
 }
 
+/* PASO 9️⃣: BOTONES DE ACCIÓN (EDITAR / ELIMINAR) */
+/* Alinea los botones horizontalmente y aplica colores distintivos */
 .pet-actions {
   display: flex;
   gap: 10px;
   margin-top: 10px;
 }
 
+/* Botón Editar */
 .btn-edit {
   background: #2196F3;
   color: white;
@@ -116,6 +137,7 @@ button[type="submit"]:hover {
   background: #0b7dda;
 }
 
+/* Botón Eliminar */
 .btn-delete {
   background: #f44336;
   color: white;
@@ -125,6 +147,8 @@ button[type="submit"]:hover {
   background: #da190b;
 }
 
+/* PASO 🔟: ESTILO PARA MENSAJE VACÍO */
+/* Se muestra cuando no hay registros */
 .empty {
   text-align: center;
   color: #999;

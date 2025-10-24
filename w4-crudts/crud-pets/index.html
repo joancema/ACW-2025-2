@@ -6,18 +6,27 @@
   <title>🐾 Gestión de Mascotas</title>
 </head>
 <body>
+  <!-- PASO 1️⃣: CONTENEDOR PRINCIPAL DE LA APP -->
   <div id="app">
     <div class="container">
+      <!-- PASO 2️⃣: TÍTULO / IDENTIDAD DE LA PÁGINA -->
       <h1>🐾 Gestión de Mascotas</h1>
       
-      <!-- Formulario -->
+      <!-- PASO 3️⃣: TARJETA DEL FORMULARIO (UI DEL CRUD: CREATE/UPDATE) -->
       <div class="card">
         <h2>Agregar/Editar Mascota</h2>
+
+        <!-- PASO 4️⃣: FORMULARIO CON ID PARA CAPTURAR EL SUBMIT EN main.ts -->
         <form id="pet-form">
+          <!-- PASO 5️⃣: INPUT OCULTO PARA GUARDAR EL ID CUANDO SE EDITA -->
           <input type="hidden" id="pet-id">
+
+          <!-- PASO 6️⃣: CAMPOS DE ENTRADA (NAME REQUERIDO, BREED/AGE OPCIONALES) -->
           <input type="text" id="name" placeholder="Nombre" required>
           <input type="text" id="breed" placeholder="Raza">
           <input type="number" id="age" placeholder="Edad" min="0">
+
+          <!-- PASO 7️⃣: BOTONES DE ACCIÓN (GUARDAR = SUBMIT, CANCELAR = RESET/STATE) -->
           <div class="buttons">
             <button type="submit">Guardar</button>
             <button type="button" id="cancel-btn">Cancelar</button>
@@ -25,14 +34,17 @@
         </form>
       </div>
 
-      <!-- Lista de mascotas -->
+      <!-- PASO 8️⃣: TARJETA DE LISTADO (UI DEL CRUD: READ/DELETE) -->
       <div class="card">
         <h2>Lista de Mascotas</h2>
+
+        <!-- PASO 9️⃣: CONTENEDOR DONDE main.ts RENDERIZA LA LISTA -->
         <div id="pets-list"></div>
       </div>
     </div>
   </div>
   
+  <!-- PASO 🔟: ENLACE AL ENTRY POINT (main.ts) COMO MÓDULO ES6 -->
   <script type="module" src="/src/main.ts"></script>
 </body>
 </html>

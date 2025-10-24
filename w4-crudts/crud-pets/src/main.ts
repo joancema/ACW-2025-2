@@ -1,22 +1,26 @@
+// PASO 1️⃣: IMPORTS Y TIPOS
 import './style.css'
 import { supabase } from './supabase'
 import type { Pet } from './supabase'
 
-// Variables globales
+// PASO 2️⃣: ESTADO Y REFERENCIAS AL DOM
 let editingPet: Pet | null = null
 const form = document.getElementById('pet-form') as HTMLFormElement
 const petsList = document.getElementById('pets-list') as HTMLDivElement
 const cancelBtn = document.getElementById('cancel-btn') as HTMLButtonElement
 
-// Cargar mascotas al iniciar
+// PASO 3️⃣: ARRANQUE DEL CRUD (CARGA INICIAL)
 loadPets()
 
-// Event Listeners
+// PASO 4️⃣: EVENT LISTENERS PRINCIPALES
 form.addEventListener('submit', handleSubmit)
 cancelBtn.addEventListener('click', resetForm)
 
-// FUNCIONES PRINCIPALES
+// -----------------------------------------------------------
+// FUNCIONES PRINCIPALES DEL CRUD
+// -----------------------------------------------------------
 
+// PASO 5️⃣: READ → LEER MASCOTAS DESDE SUPABASE
 async function loadPets() {
   console.log('Cargando mascotas...')
   
@@ -35,6 +39,7 @@ async function loadPets() {
   displayPets(data || [])
 }
 
+// PASO 6️⃣: RENDER → MOSTRAR MASCOTAS EN PANTALLA
 function displayPets(pets: Pet[]) {
   if (pets.length === 0) {
     petsList.innerHTML = '<p class="empty">No hay mascotas registradas</p>'
@@ -56,6 +61,7 @@ function displayPets(pets: Pet[]) {
   `).join('')
 }
 
+// PASO 7️⃣: PREPARAR DATOS DEL FORMULARIO
 async function handleSubmit(e: Event) {
   e.preventDefault()
   
@@ -74,8 +80,9 @@ async function handleSubmit(e: Event) {
   
   let result
   
+  // PASO 8️⃣: CREATE vs UPDATE SEGÚN editingPet
   if (editingPet?.id) {
-    // Actualizar
+    // Actualizar mascota existente
     result = await supabase
       .from('pets')
       .update(petData)
@@ -83,7 +90,7 @@ async function handleSubmit(e: Event) {
     
     console.log('Mascota actualizada')
   } else {
-    // Crear
+    // Crear nueva mascota
     result = await supabase
       .from('pets')
       .insert([petData])
@@ -97,10 +104,12 @@ async function handleSubmit(e: Event) {
     return
   }
   
+  // PASO 9️⃣: RESETEAR FORMULARIO Y RECARGAR LISTA
   resetForm()
   loadPets()
 }
 
+// RESET DEL FORMULARIO
 function resetForm() {
   form.reset()
   editingPet = null
@@ -108,7 +117,11 @@ function resetForm() {
   console.log('Formulario reseteado')
 }
 
-// Funciones globales (accesibles desde los botones del HTML)
+// -----------------------------------------------------------
+// PASO 🔟: EDITAR Y ELIMINAR MASCOTAS
+// -----------------------------------------------------------
+
+// EDITAR UNA MASCOTA EXISTENTE
 (window as any).editPet = async (id: string) => {
   console.log('Editando mascota:', id)
   
@@ -134,6 +147,7 @@ function resetForm() {
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
+// ELIMINAR UNA MASCOTA
 (window as any).deletePet = async (id: string) => {
   if (!confirm('¿Eliminar esta mascota?')) return
   
