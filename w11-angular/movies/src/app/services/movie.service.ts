@@ -8,16 +8,13 @@
 // - Angular usa el patrón de inyección de dependencias
 // - Los servicios son singletons por defecto
 // - Se pueden inyectar en cualquier componente
+// - Usa HttpClient en lugar de fetch
 
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, catchError, of } from 'rxjs';
 import { Movie } from '../models/movie';
-
-// ============================================
-// CONFIGURACIÓN DE SUPABASE
-// ============================================
-// Los mismos valores que en React y Vue
-const SUPABASE_URL = 'https://mefqiknqtmsrvygeghnw.supabase.co/rest/v1';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lZnFpa25xdG1zcnZ5Z2VnaG53Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjExNDQyNzYsImV4cCI6MjA3NjcyMDI3Nn0.aqg9_3Yl6dBULyNRwxS_BEJj1hjv7TNBFkxHVsrDAVA';
+import { environment } from '../../environments/environment';
 
 // ============================================
 // DECORADOR @Injectable
@@ -29,33 +26,68 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
   providedIn: 'root'
 })
 export class MovieService {
+  // Variables de entorno (configuradas en environments/)
+  private apiUrl = environment.supabaseUrl;
+  private apiKey = environment.supabaseKey;
+
+  // ============================================
+  // INYECCIÓN DE DEPENDENCIAS
+  // ============================================
+  // HttpClient se inyecta automáticamente por Angular
+  // Esto es posible porque configuramos provideHttpClient() en app.config.ts
+  
+  constructor(private http: HttpClient) {}
 
   // ============================================
   // MÉTODO PARA OBTENER PELÍCULAS
   // ============================================
-  // La lógica es IGUAL que en React y Vue,
-  // solo cambia cómo se organiza en una clase
+  // Retorna un Observable (patrón reactivo de Angular)
+  //
+  // Comparación:
+  // React/Vue: async function getMovies(): Promise<Movie[]>
+  // Angular:   getMovies(): Observable<Movie[]>
 
-  async getMovies(): Promise<Movie[]> {
-    try {
-      const response = await fetch(`${SUPABASE_URL}/movies`, {
-        headers: {
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${SUPABASE_KEY}`
-        }
-      });
+  getMovies(): Observable<Movie[]> {
+    // Configurar headers para Supabase
+    const headers = new HttpHeaders({
+      'apikey': this.apiKey,
+      'Authorization': `Bearer ${this.apiKey}`
+    });
 
-      if (!response.ok) {
-        console.error('Error al obtener películas:', response.statusText);
-        return [];
-      }
-
-      const movies: Movie[] = await response.json();
-      return movies;
-
-    } catch (error) {
-      console.error('Error de conexión:', error);
-      return [];
-    }
+    // Hacer petición GET con HttpClient
+    // get<Movie[]> indica que esperamos un array de películas
+    return this.http.get<Movie[]>(`${this.apiUrl}/movies`, { headers })
+      .pipe(
+        // Manejo de errores con operadores RxJS
+        catchError(error => {
+          console.error('Error al obtener películas:', error);
+          // Retorna un array vacío en caso de error
+          return of([]);
+        })
+      );
   }
+
+  // ============================================
+  // MÉTODO ALTERNATIVO: Convertir a Promise
+  // ============================================
+  // Si prefieres trabajar con async/await (como en React/Vue),
+  // puedes convertir el Observable a Promise con firstValueFrom()
+  //
+  // import { firstValueFrom } from 'rxjs';
+  //
+  // async getMoviesAsync(): Promise<Movie[]> {
+  //   const headers = new HttpHeaders({
+  //     'apikey': this.apiKey,
+  //     'Authorization': `Bearer ${this.apiKey}`
+  //   });
+  //
+  //   try {
+  //     return await firstValueFrom(
+  //       this.http.get<Movie[]>(`${this.apiUrl}/movies`, { headers })
+  //     );
+  //   } catch (error) {
+  //     console.error('Error:', error);
+  //     return [];
+  //   }
+  // }
 }

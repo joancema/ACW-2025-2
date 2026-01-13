@@ -26,15 +26,18 @@ La **misma** aplicación que las versiones anteriores:
 4. [Paso 2: Entender la estructura inicial](#paso-2-entender-la-estructura-inicial)
 5. [Paso 3: Crear la estructura en capas](#paso-3-crear-la-estructura-en-capas)
 6. [Paso 4: Crear la Interface Movie](#paso-4-crear-la-interface-movie)
-7. [Paso 5: Crear el Servicio de Películas](#paso-5-crear-el-servicio-de-películas)
-8. [Paso 6: Crear el Componente MovieCard](#paso-6-crear-el-componente-moviecard)
-9. [Paso 7: Actualizar el Componente App](#paso-7-actualizar-el-componente-app)
-10. [Paso 8: Agregar los Estilos](#paso-8-agregar-los-estilos)
-11. [Paso 9: Ejecutar el proyecto](#paso-9-ejecutar-el-proyecto)
-12. [Resumen de diferencias](#resumen-diferencias-clave)
-13. [Conceptos de Angular](#conceptos-nuevos-de-angular)
-14. [Errores comunes](#errores-comunes)
-15. [Próximos pasos](#próximos-pasos)
+7. [Paso 5: Configurar Variables de Entorno](#paso-5-configurar-variables-de-entorno)
+8. [Paso 6: Configurar HttpClient](#paso-6-configurar-httpclient)
+9. [Paso 7: Crear el Servicio de Películas](#paso-7-crear-el-servicio-de-películas)
+10. [Paso 8: Crear el Componente MovieCard](#paso-8-crear-el-componente-moviecard)
+11. [Paso 9: Actualizar el Componente App](#paso-9-actualizar-el-componente-app)
+12. [Paso 10: Agregar los Estilos](#paso-10-agregar-los-estilos)
+13. [Paso 11: Ejecutar el proyecto](#paso-11-ejecutar-el-proyecto)
+14. [Resumen de diferencias](#resumen-diferencias-clave)
+15. [Conceptos de Angular](#conceptos-nuevos-de-angular)
+16. [Errores comunes](#errores-comunes)
+17. [Comandos del CLI - Referencia Rápida](#comandos-del-cli---referencia-rápida)
+18. [Próximos pasos](#próximos-pasos)
 
 ---
 
@@ -136,20 +139,42 @@ src/app/
 │   └── movie.service.ts
 ├── components/          # Componentes visuales
 │   └── movie-card/
-│       └── movie-card.component.ts
+│       ├── movie-card.component.ts      # Lógica
+│       ├── movie-card.component.html    # Template
+│       └── movie-card.component.css     # Estilos
 ├── app.component.ts     # Componente principal
 ├── app.component.html   # Template principal
 ├── app.component.css    # Estilos principales
 └── app.config.ts        # Configuración
 ```
 
-**Crear las carpetas:**
+### 🚀 Usando Angular CLI para generar archivos
+
+**Angular CLI puede generar automáticamente** servicios, componentes y más. Esto es mucho más rápido que crear archivos manualmente:
 
 ```bash
+# Generar un servicio
+ng generate service services/movie
+# o abreviado:
+ng g s services/movie
+
+# Generar un componente
+ng generate component components/movie-card
+# o abreviado:
+ng g c components/movie-card
+```
+
+**Ventajas del CLI:**
+- Crea la estructura de archivos correcta automáticamente
+- Aplica las convenciones de nomenclatura de Angular
+- Configura los decoradores con los valores por defecto
+- Ahorra tiempo y evita errores
+
+**Para las interfaces**, como son archivos simples, se pueden crear manualmente o usar:
+
+```bash
+# Crear carpeta de modelos
 mkdir src/app/models
-mkdir src/app/services
-mkdir src/app/components
-mkdir src/app/components/movie-card
 ```
 
 **Nota sobre convenciones de Angular:**
@@ -189,7 +214,111 @@ export interface Movie {
 
 ---
 
-## Paso 5: Crear el Servicio de Películas
+## Paso 5: Configurar Variables de Entorno
+
+### ¿Por qué usar variables de entorno?
+
+Las variables de entorno permiten:
+- Separar configuración de desarrollo y producción
+- No exponer claves sensibles en el código
+- Cambiar configuraciones sin modificar el código
+
+### Crear archivos de entorno
+
+Angular maneja las variables de entorno con archivos específicos:
+
+**Crear `src/environments/environment.ts` (desarrollo):**
+
+```typescript
+// ============================================
+// VARIABLES DE ENTORNO - DESARROLLO
+// ============================================
+// Este archivo se usa cuando ejecutas `ng serve`.
+
+export const environment = {
+  production: false,
+  supabaseUrl: 'https://TU-PROYECTO.supabase.co/rest/v1',
+  supabaseKey: 'TU-ANON-KEY-AQUI'
+};
+```
+
+**Crear `src/environments/environment.prod.ts` (producción):**
+
+```typescript
+// ============================================
+// VARIABLES DE ENTORNO - PRODUCCIÓN
+// ============================================
+// Este archivo se usa cuando compilas con `ng build --configuration=production`.
+
+export const environment = {
+  production: true,
+  supabaseUrl: 'https://TU-PROYECTO-PROD.supabase.co/rest/v1',
+  supabaseKey: 'TU-ANON-KEY-PRODUCCION'
+};
+```
+
+### Cómo funciona
+
+Angular automáticamente usa el archivo correcto según el comando:
+
+```bash
+ng serve                              # Usa environment.ts
+ng build                              # Usa environment.ts
+ng build --configuration=production   # Usa environment.prod.ts
+```
+
+**Importante**: Agrega estos archivos a `.gitignore` si contienen datos sensibles:
+
+```
+# .gitignore
+src/environments/environment.ts
+src/environments/environment.prod.ts
+```
+
+---
+
+## Paso 6: Configurar HttpClient
+
+### ¿Qué es HttpClient?
+
+`HttpClient` es el cliente HTTP nativo de Angular. Ventajas sobre `fetch`:
+- Integrado con el sistema de inyección de dependencias
+- Retorna Observables (patrón reactivo)
+- Interceptores para modificar peticiones/respuestas
+- Mejor manejo de errores
+- Testing más fácil
+
+### Habilitar HttpClient en `src/app/app.config.ts`
+
+```typescript
+// ============================================
+// CONFIGURACIÓN GLOBAL DE LA APLICACIÓN
+// ============================================
+
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient, withFetch } from '@angular/common/http';
+
+import { routes } from './app.routes';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(routes),
+    
+    // ← Habilita HttpClient para toda la aplicación
+    provideHttpClient(withFetch())
+  ]
+};
+```
+
+**Explicación:**
+- `provideHttpClient()`: Habilita el servicio HttpClient
+- `withFetch()`: Usa la API Fetch nativa del navegador (más moderno)
+
+---
+
+## Paso 7: Crear el Servicio de Películas
 
 ### ¿Qué es un Servicio en Angular?
 
@@ -198,10 +327,25 @@ En Angular, los **servicios** son clases que:
 - Se comparten entre componentes
 - Se inyectan usando Dependency Injection (DI)
 - Son singletons por defecto
+- **Usan HttpClient para peticiones HTTP**
 
-**Esto es diferente de React/Vue** donde típicamente usamos funciones simples.
+**Esto es diferente de React/Vue** donde típicamente usamos funciones simples con fetch.
 
-### Crear el archivo `src/app/services/movie.service.ts`
+### 🚀 Generar el servicio con CLI
+
+```bash
+ng generate service services/movie
+# o abreviado:
+ng g s services/movie
+```
+
+Esto genera automáticamente:
+- `src/app/services/movie.service.ts` - El servicio con el decorador `@Injectable`
+- `src/app/services/movie.service.spec.ts` - Archivo de pruebas (si no usaste `--skip-tests`)
+
+### Modificar el archivo `src/app/services/movie.service.ts`
+
+Después de generarlo con el CLI, modifica el contenido:
 
 ```typescript
 // ============================================
@@ -213,58 +357,80 @@ En Angular, los **servicios** son clases que:
 // DIFERENCIAS CON REACT/VUE:
 // - Angular usa el patrón de inyección de dependencias
 // - Los servicios son singletons por defecto
-// - Se pueden inyectar en cualquier componente
+// - Usa HttpClient en lugar de fetch
+// - Retorna Observables en lugar de Promises
 
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, catchError, of } from 'rxjs';
 import { Movie } from '../models/movie';
-
-// ============================================
-// CONFIGURACIÓN DE SUPABASE
-// ============================================
-// Los mismos valores que en React y Vue
-const SUPABASE_URL = 'https://TU-PROYECTO.supabase.co/rest/v1';
-const SUPABASE_KEY = 'TU-ANON-KEY-AQUI';
-
-// ============================================
-// DECORADOR @Injectable
-// ============================================
-// providedIn: 'root' significa que Angular creará
-// una única instancia del servicio para toda la app
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MovieService {
+  // Variables de entorno (configuradas en environments/)
+  private apiUrl = environment.supabaseUrl;
+  private apiKey = environment.supabaseKey;
+
+  // ============================================
+  // INYECCIÓN DE DEPENDENCIAS
+  // ============================================
+  // HttpClient se inyecta automáticamente por Angular
+  
+  constructor(private http: HttpClient) {}
 
   // ============================================
   // MÉTODO PARA OBTENER PELÍCULAS
   // ============================================
-  // La lógica es IGUAL que en React y Vue,
-  // solo cambia cómo se organiza en una clase
+  // Retorna un Observable (patrón reactivo de Angular)
+  //
+  // Comparación:
+  // React/Vue: async function getMovies(): Promise<Movie[]>
+  // Angular:   getMovies(): Observable<Movie[]>
 
-  async getMovies(): Promise<Movie[]> {
-    try {
-      const response = await fetch(`${SUPABASE_URL}/movies`, {
-        headers: {
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${SUPABASE_KEY}`
-        }
-      });
+  getMovies(): Observable<Movie[]> {
+    // Configurar headers para Supabase
+    const headers = new HttpHeaders({
+      'apikey': this.apiKey,
+      'Authorization': `Bearer ${this.apiKey}`
+    });
 
-      if (!response.ok) {
-        console.error('Error al obtener películas:', response.statusText);
-        return [];
-      }
-
-      const movies: Movie[] = await response.json();
-      return movies;
-
-    } catch (error) {
-      console.error('Error de conexión:', error);
-      return [];
-    }
+    // Hacer petición GET con HttpClient
+    return this.http.get<Movie[]>(`${this.apiUrl}/movies`, { headers })
+      .pipe(
+        // Manejo de errores con operadores RxJS
+        catchError(error => {
+          console.error('Error al obtener películas:', error);
+          return of([]); // Retorna array vacío en caso de error
+        })
+      );
   }
 }
+```
+
+### ¿Qué son los Observables?
+
+Los **Observables** son como Promises, pero más potentes:
+
+| Característica | Promise | Observable |
+|----------------|---------|------------|
+| **Valores** | Un solo valor | Múltiples valores en el tiempo |
+| **Cancelable** | No | Sí (unsubscribe) |
+| **Lazy** | Se ejecuta inmediatamente | Se ejecuta al suscribirse |
+| **Operadores** | then/catch | pipe, map, filter, etc. |
+
+**Ejemplo de conversión:**
+
+```typescript
+// Con Promise (React/Vue)
+const movies = await getMovies();
+
+// Con Observable (Angular)
+this.service.getMovies().subscribe(movies => {
+  // usar movies aquí
+});
 ```
 
 ### Comparación con React/Vue
@@ -297,17 +463,39 @@ export class MovieService {
 
 ---
 
-## Paso 6: Crear el Componente MovieCard
+## Paso 8: Crear el Componente MovieCard
 
 ### ¿Qué es un Componente en Angular?
 
 Los componentes en Angular son **clases TypeScript** decoradas con `@Component()`. Tienen:
 - **selector**: Cómo se usa en el HTML
-- **template**: El HTML del componente
-- **styles**: CSS del componente (encapsulado)
+- **templateUrl**: Archivo HTML del componente
+- **styleUrl**: Archivo CSS del componente (encapsulado)
 - **imports**: Otros componentes/módulos que usa
 
-### Crear el archivo `src/app/components/movie-card/movie-card.component.ts`
+### 🚀 Generar el componente con CLI
+
+```bash
+ng generate component components/movie-card
+# o abreviado:
+ng g c components/movie-card
+```
+
+Esto genera automáticamente **3 archivos**:
+
+```
+src/app/components/movie-card/
+├── movie-card.component.ts      # Lógica del componente
+├── movie-card.component.html    # Template HTML
+├── movie-card.component.css     # Estilos CSS
+└── movie-card.component.spec.ts # Pruebas (si no usaste --skip-tests)
+```
+
+**Esta es la forma estándar de Angular** - cada componente tiene sus archivos separados, lo que facilita la organización y el mantenimiento.
+
+### Modificar el archivo `src/app/components/movie-card/movie-card.component.ts`
+
+Después de generarlo con el CLI, modifica el contenido:
 
 ```typescript
 // ============================================
@@ -320,7 +508,7 @@ Los componentes en Angular son **clases TypeScript** decoradas con `@Component()
 // - Angular usa decoradores (@Component, @Input)
 // - Los componentes son clases TypeScript
 // - Las props se definen con @Input()
-// - Template y estilos pueden estar en archivos separados
+// - Template y estilos están en archivos separados
 
 import { Component, Input } from '@angular/core';
 import { Movie } from '../../models/movie';
@@ -341,67 +529,11 @@ import { Movie } from '../../models/movie';
   // imports: Otros componentes/módulos que usa este componente
   imports: [],
   
-  // template: El HTML del componente (inline para componentes pequeños)
-  template: `
-    <div class="movie-card">
-      <img 
-        [src]="movie.image" 
-        [alt]="movie.title" 
-        class="movie-poster"
-      />
-      <div class="movie-info">
-        <h3 class="movie-title">{{ movie.title }}</h3>
-        <span class="movie-genre">{{ movie.genre }}</span>
-        <p class="movie-description">{{ movie.description }}</p>
-      </div>
-    </div>
-  `,
+  // templateUrl: Archivo HTML separado (generado por el CLI)
+  templateUrl: './movie-card.component.html',
   
-  // styles: Estilos del componente (encapsulados por defecto)
-  styles: [`
-    .movie-card {
-      background-color: #16213e;
-      border-radius: 10px;
-      overflow: hidden;
-      transition: transform 0.3s;
-    }
-
-    .movie-card:hover {
-      transform: scale(1.03);
-    }
-
-    .movie-poster {
-      width: 100%;
-      height: 350px;
-      object-fit: cover;
-    }
-
-    .movie-info {
-      padding: 15px;
-    }
-
-    .movie-title {
-      font-size: 1.2rem;
-      margin-bottom: 8px;
-      color: #fff;
-    }
-
-    .movie-genre {
-      display: inline-block;
-      background-color: #e94560;
-      color: #fff;
-      padding: 4px 10px;
-      border-radius: 15px;
-      font-size: 0.8rem;
-      margin-bottom: 10px;
-    }
-
-    .movie-description {
-      font-size: 0.9rem;
-      color: #aaa;
-      line-height: 1.4;
-    }
-  `]
+  // styleUrl: Archivo CSS separado (generado por el CLI)
+  styleUrl: './movie-card.component.css'
 })
 export class MovieCardComponent {
   // ============================================
@@ -413,8 +545,95 @@ export class MovieCardComponent {
   // React:  function MovieCard({ movie }: { movie: Movie })
   // Vue:    defineProps<{ movie: Movie }>()
   // Angular: @Input() movie!: Movie
+  //
+  // El ! indica que TypeScript debe confiar en que
+  // siempre se pasará un valor (required input)
 
   @Input() movie!: Movie;
+}
+```
+
+### Crear el template `src/app/components/movie-card/movie-card.component.html`
+
+```html
+<!-- ============================================
+     TEMPLATE DEL COMPONENTE MOVIE CARD
+     ============================================
+     DIFERENCIAS CON REACT/VUE:
+     - Binding de propiedades: [src]="movie.image"
+       React: src={movie.image}
+       Vue: :src="movie.image"
+     - Interpolación: {{ movie.title }}
+       React: {movie.title}
+       Vue: {{ movie.title }}
+     - class normal (igual que Vue, diferente de React className)
+-->
+
+<div class="movie-card">
+  <img 
+    [src]="movie.image" 
+    [alt]="movie.title" 
+    class="movie-poster"
+  />
+  <div class="movie-info">
+    <h3 class="movie-title">{{ movie.title }}</h3>
+    <span class="movie-genre">{{ movie.genre }}</span>
+    <p class="movie-description">{{ movie.description }}</p>
+  </div>
+</div>
+```
+
+### Crear los estilos `src/app/components/movie-card/movie-card.component.css`
+
+```css
+/* ============================================
+   ESTILOS DEL COMPONENTE MOVIE CARD
+   ============================================
+   Angular encapsula los estilos por defecto,
+   así que estos estilos NO afectan otros componentes.
+*/
+
+.movie-card {
+  background-color: #16213e;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.3s;
+}
+
+.movie-card:hover {
+  transform: scale(1.03);
+}
+
+.movie-poster {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+}
+
+.movie-info {
+  padding: 15px;
+}
+
+.movie-title {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+.movie-genre {
+  display: inline-block;
+  background-color: #e94560;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  margin-bottom: 10px;
+}
+
+.movie-description {
+  font-size: 0.9rem;
+  color: #aaa;
+  line-height: 1.4;
 }
 ```
 
@@ -436,7 +655,7 @@ export class MovieCardComponent {
 
 ---
 
-## Paso 7: Actualizar el Componente App
+## Paso 9: Actualizar el Componente App
 
 ### Modificar `src/app/app.component.ts`
 
@@ -449,10 +668,11 @@ export class MovieCardComponent {
 // DIFERENCIAS CON REACT/VUE:
 // - Angular usa decoradores (@Component)
 // - Inyección de dependencias para servicios
-// - Lifecycle hooks como métodos de clase (ngOnInit)
-// - Template separado del código TypeScript
+// - Lifecycle hooks como métodos de clase (ngOnInit, ngOnDestroy)
+// - Trabaja con Observables (patrón reactivo)
 
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { MovieService } from './services/movie.service';
 import { MovieCardComponent } from './components/movie-card/movie-card.component';
 import { Movie } from './models/movie';
@@ -464,13 +684,13 @@ import { Movie } from './models/movie';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   // ============================================
   // INYECCIÓN DE DEPENDENCIAS
   // ============================================
-  // inject() es la forma moderna de inyectar servicios en Angular 14+
+  // MovieService se inyecta automáticamente por Angular
   
-  private movieService = inject(MovieService);
+  private subscription?: Subscription;
 
   // ============================================
   // ESTADO DEL COMPONENTE
@@ -484,6 +704,9 @@ export class AppComponent implements OnInit {
   
   movies: Movie[] = [];
   loading = true;
+
+  // Constructor: Se ejecuta cuando se crea la instancia
+  constructor(private movieService: MovieService) {}
 
   // ============================================
   // LIFECYCLE HOOK: ngOnInit
@@ -500,16 +723,62 @@ export class AppComponent implements OnInit {
   }
 
   // ============================================
+  // LIFECYCLE HOOK: ngOnDestroy
+  // ============================================
+  // Se ejecuta cuando el componente se destruye.
+  // Es importante cancelar las suscripciones para evitar memory leaks.
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  // ============================================
   // MÉTODO PARA CARGAR PELÍCULAS
   // ============================================
+  // Usa Observables (patrón reactivo de Angular)
+  //
+  // Comparación:
+  // React/Vue: async loadMovies() { const data = await getMovies(); setMovies(data) }
+  // Angular:   loadMovies() { this.service.getMovies().subscribe(data => this.movies = data) }
 
-  async loadMovies(): Promise<void> {
+  loadMovies(): void {
     this.loading = true;
-    this.movies = await this.movieService.getMovies();
-    this.loading = false;
+    
+    // subscribe() es como .then() en Promises
+    // Pero con más control: next, error, complete
+    this.subscription = this.movieService.getMovies().subscribe({
+      // next: Se ejecuta cuando llegan los datos
+      next: (data) => {
+        this.movies = data;
+        this.loading = false;
+      },
+      
+      // error: Se ejecuta si hay un error
+      error: (error) => {
+        console.error('Error al cargar películas:', error);
+        this.loading = false;
+      },
+      
+      // complete: Se ejecuta cuando el Observable termina (opcional)
+      complete: () => {
+        console.log('Carga de películas completada');
+      }
+    });
   }
 }
 ```
+
+### Diferencias clave con React/Vue
+
+| Aspecto | React/Vue | Angular |
+|---------|-----------|---------|
+| **Petición HTTP** | `await fetch()` o `await axios.get()` | `http.get().subscribe()` |
+| **Tipo de retorno** | Promise | Observable |
+| **Manejo de datos** | `setMovies(data)` o `movies.value = data` | `this.movies = data` |
+| **Cancelación** | AbortController | `unsubscribe()` |
+| **Cleanup** | useEffect return o onUnmounted | `ngOnDestroy()` |
 
 ### Modificar `src/app/app.component.html`
 
@@ -575,7 +844,7 @@ export class AppComponent implements OnInit {
 
 ---
 
-## Paso 8: Agregar los Estilos
+## Paso 10: Agregar los Estilos
 
 ### Estilos globales: `src/styles.css`
 
@@ -652,7 +921,7 @@ body {
 
 ---
 
-## Paso 9: Ejecutar el proyecto
+## Paso 11: Ejecutar el proyecto
 
 ```bash
 ng serve
@@ -704,8 +973,13 @@ Abre tu navegador en `http://localhost:4200`
 | **Decoradores** | Funciones que modifican clases (`@Component`, `@Injectable`, `@Input`) |
 | **Standalone** | Componentes que no necesitan módulos (Angular 14+) |
 | **Inyección de dependencias** | Sistema para compartir servicios entre componentes |
-| **inject()** | Función para inyectar servicios (Angular 14+) |
+| **HttpClient** | Cliente HTTP nativo de Angular (reemplaza fetch) |
+| **Observables** | Patrón reactivo para manejar datos asíncronos (RxJS) |
+| **subscribe()** | Método para escuchar valores de un Observable |
+| **pipe()** | Operador para transformar datos en Observables |
+| **environment** | Archivos para variables de entorno (dev/prod) |
 | **ngOnInit** | Lifecycle hook que se ejecuta al inicializar el componente |
+| **ngOnDestroy** | Lifecycle hook que se ejecuta al destruir el componente |
 | **@Input()** | Decorador para definir props que vienen del padre |
 | **@Output()** | Decorador para definir eventos que van al padre |
 | **Property binding** | `[property]="value"` para binding unidireccional |
@@ -876,19 +1150,81 @@ movies/
 └── src/
     ├── index.html
     ├── main.ts
-    ├── styles.css                    # Estilos globales
+    ├── styles.css                              # Estilos globales
+    ├── environments/                           # ← Variables de entorno
+    │   ├── environment.ts                      # Desarrollo
+    │   └── environment.prod.ts                 # Producción
     └── app/
         ├── models/
-        │   └── movie.ts              # Interface Movie
+        │   └── movie.ts                        # Interface Movie
         ├── services/
-        │   └── movie.service.ts      # Servicio de API
+        │   └── movie.service.ts                # Servicio con HttpClient
         ├── components/
         │   └── movie-card/
-        │       └── movie-card.component.ts
-        ├── app.component.ts          # Componente principal
-        ├── app.component.html        # Template principal
-        ├── app.component.css         # Estilos del componente
-        └── app.config.ts             # Configuración
+        │       ├── movie-card.component.ts     # Lógica del componente
+        │       ├── movie-card.component.html   # Template HTML
+        │       └── movie-card.component.css    # Estilos CSS
+        ├── app.component.ts                    # Componente principal
+        ├── app.component.html                  # Template principal
+        ├── app.component.css                   # Estilos del componente
+        ├── app.config.ts                       # Configuración (con HttpClient)
+        └── app.routes.ts                       # Rutas
+```
+
+---
+
+## Comandos del CLI - Referencia Rápida
+
+Angular CLI es una herramienta poderosa. Aquí están los comandos más usados:
+
+### Crear proyecto
+
+```bash
+ng new nombre-proyecto                    # Crear nuevo proyecto
+ng new nombre-proyecto --style=scss       # Con SCSS
+ng new nombre-proyecto --skip-tests       # Sin archivos de prueba
+ng new nombre-proyecto --ssr=false        # Sin Server-Side Rendering
+```
+
+### Generar archivos
+
+```bash
+# Componentes
+ng generate component nombre              # Genera componente con archivos separados
+ng g c nombre                             # Abreviado
+ng g c nombre --inline-template           # Template en el .ts
+ng g c nombre --inline-style              # Estilos en el .ts
+ng g c nombre --skip-tests                # Sin archivo de pruebas
+ng g c carpeta/nombre                     # En una subcarpeta
+
+# Servicios
+ng generate service nombre                # Genera servicio
+ng g s nombre                             # Abreviado
+ng g s carpeta/nombre                     # En una subcarpeta
+
+# Otros
+ng generate interface nombre              # Genera interface
+ng generate pipe nombre                   # Genera pipe
+ng generate directive nombre              # Genera directiva
+ng generate guard nombre                  # Genera guard
+```
+
+### Ejecutar y compilar
+
+```bash
+ng serve                                  # Servidor de desarrollo (localhost:4200)
+ng serve --port 3000                      # En puerto específico
+ng serve --open                           # Abre el navegador automáticamente
+ng build                                  # Compila para producción
+ng build --configuration=production       # Compila optimizado
+```
+
+### Ver ayuda
+
+```bash
+ng help                                   # Ayuda general
+ng generate --help                        # Ayuda de generate
+ng g c --help                             # Ayuda de componente
 ```
 
 ---

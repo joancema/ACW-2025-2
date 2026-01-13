@@ -6,10 +6,11 @@
 // DIFERENCIAS CON REACT/VUE:
 // - Angular usa decoradores (@Component)
 // - Inyección de dependencias para servicios
-// - Lifecycle hooks como métodos de clase (ngOnInit)
-// - Template separado del código TypeScript
+// - Lifecycle hooks como métodos de clase (ngOnInit, ngOnDestroy)
+// - Trabaja con Observables (patrón reactivo)
 
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { MovieService } from './services/movie.service';
 import { MovieCardComponent } from './components/movie-card/movie-card.component';
 import { Movie } from './models/movie';
@@ -31,15 +32,15 @@ import { Movie } from './models/movie';
   // styleUrl: Archivo CSS separado
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   // ============================================
   // INYECCIÓN DE DEPENDENCIAS
   // ============================================
-  // inject() es la forma moderna de inyectar servicios en Angular 14+
-  // También se puede usar el constructor tradicional:
-  // constructor(private movieService: MovieService) {}
+  // MovieService se inyecta automáticamente por Angular
+  // No necesitamos importarlo manualmente como en React/Vue
   
-  private movieService = inject(MovieService);
+  private movieService = MovieService;
+  private subscription?: Subscription;
 
   // ============================================
   // ESTADO DEL COMPONENTE
@@ -53,6 +54,11 @@ export class AppComponent implements OnInit {
   
   movies: Movie[] = [];
   loading = true;
+
+  // Constructor: Se ejecuta cuando se crea la instancia
+  constructor(private movieServiceInstance: MovieService) {
+    this.movieService = MovieService;
+  }
 
   // ============================================
   // LIFECYCLE HOOK: ngOnInit
@@ -69,14 +75,49 @@ export class AppComponent implements OnInit {
   }
 
   // ============================================
+  // LIFECYCLE HOOK: ngOnDestroy
+  // ============================================
+  // Se ejecuta cuando el componente se destruye.
+  // Es importante cancelar las suscripciones para evitar memory leaks.
+
+  ngOnDestroy(): void {
+    // Cancelar la suscripción si existe
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  // ============================================
   // MÉTODO PARA CARGAR PELÍCULAS
   // ============================================
-  // La lógica es la misma que en React/Vue,
-  // solo cambia la sintaxis para actualizar el estado.
+  // Usa Observables (patrón reactivo de Angular)
+  //
+  // Comparación:
+  // React/Vue: async loadMovies() { const data = await getMovies(); setMovies(data) }
+  // Angular:   loadMovies() { this.service.getMovies().subscribe(data => this.movies = data) }
 
-  async loadMovies(): Promise<void> {
+  loadMovies(): void {
     this.loading = true;
-    this.movies = await this.movieService.getMovies();
-    this.loading = false;
+    
+    // subscribe() es como .then() en Promises
+    // Pero con más control: next, error, complete
+    this.subscription = this.movieServiceInstance.getMovies().subscribe({
+      // next: Se ejecuta cuando llegan los datos
+      next: (data) => {
+        this.movies = data;
+        this.loading = false;
+      },
+      
+      // error: Se ejecuta si hay un error
+      error: (error) => {
+        console.error('Error al cargar películas:', error);
+        this.loading = false;
+      },
+      
+      // complete: Se ejecuta cuando el Observable termina (opcional)
+      complete: () => {
+        console.log('Carga de películas completada');
+      }
+    });
   }
 }
