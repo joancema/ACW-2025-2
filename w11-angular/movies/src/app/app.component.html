@@ -1,0 +1,56 @@
+<!-- ============================================
+     TEMPLATE DEL COMPONENTE PRINCIPAL (ANGULAR)
+     ============================================
+     Este es el HTML del componente App.
+     
+     DIFERENCIAS CON REACT/VUE:
+     - Condicionales: @if/@else (Angular 17+) o *ngIf
+     - Loops: @for (Angular 17+) o *ngFor
+     - Binding: [property]="value"
+     - Interpolación: {{ variable }}
+-->
+
+<div id="app">
+  <!-- ============================================
+       RENDERIZADO CONDICIONAL
+       ============================================
+       Angular 17+ usa la nueva sintaxis @if/@else
+       Equivalente a:
+       - React: {loading && <p>...</p>}
+       - Vue:   <p v-if="loading">...</p>
+  -->
+  
+  @if (loading) {
+    <!-- Mientras carga, mostramos mensaje -->
+    <p class="loading">Cargando cartelera...</p>
+  } @else if (movies.length === 0) {
+    <!-- Si no hay películas -->
+    <p class="empty">No hay películas en cartelera</p>
+  } @else {
+    <!-- Contenido principal -->
+    <header class="header">
+      <h1>Cartelera de Cine</h1>
+    </header>
+    
+    <main class="billboard">
+      <!-- ============================================
+           ITERACIÓN CON @for
+           ============================================
+           Angular 17+ usa @for en lugar de *ngFor.
+           
+           Comparación:
+           - React: {movies.map(movie => <MovieCard key={movie.id} movie={movie} />)}
+           - Vue:   <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
+           - Angular: @for (movie of movies; track movie.id) {
+                        <app-movie-card [movie]="movie" />
+                      }
+           
+           track: Similar a key en React/Vue, ayuda a Angular
+           a identificar elementos y optimizar el renderizado.
+      -->
+      @for (movie of movies; track movie.id) {
+        <app-movie-card [movie]="movie" />
+      }
+    </main>
+  }
+</div>
