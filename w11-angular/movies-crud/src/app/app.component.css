@@ -1,0 +1,9 @@
+/* ============================================
+   ESTILOS DEL COMPONENTE APP
+   ============================================
+   Estilos mínimos ya que el contenido está en las páginas
+*/
+
+#app {
+  min-height: 100vh;
+}

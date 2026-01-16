@@ -1,0 +1,18 @@
+<div class="billboard-container">
+  <header class="billboard-header">
+    <a routerLink="/" class="back-link">← Volver al inicio</a>
+    <h1>Cartelera de Cine</h1>
+  </header>
+
+  @if (loading) {
+    <p class="loading">Cargando cartelera...</p>
+  } @else if (movies.length === 0) {
+    <p class="empty">No hay películas en cartelera</p>
+  } @else {
+    <div class="billboard-grid">
+      @for (movie of movies; track movie.id) {
+        <app-movie-card [movie]="movie" />
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,27 @@
+<!-- ============================================
+     TEMPLATE DEL COMPONENTE MOVIE CARD
+     ============================================
+     Este archivo contiene el HTML del componente.
+     
+     DIFERENCIAS CON REACT/VUE:
+     - Binding de propiedades: [src]="movie.image"
+       React: src={movie.image}
+       Vue: :src="movie.image"
+     - Interpolación: {{ movie.title }}
+       React: {movie.title}
+       Vue: {{ movie.title }}
+     - class normal (igual que Vue, diferente de React className)
+-->
+
+<div class="movie-card">
+  <img 
+    [src]="movie.image" 
+    [alt]="movie.title" 
+    class="movie-poster"
+  />
+  <div class="movie-info">
+    <h3 class="movie-title">{{ movie.title }}</h3>
+    <span class="movie-genre">{{ movie.genre }}</span>
+    <p class="movie-description">{{ movie.description }}</p>
+  </div>
+</div>

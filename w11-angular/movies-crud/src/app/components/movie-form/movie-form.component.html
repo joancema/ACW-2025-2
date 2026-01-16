@@ -1,0 +1,106 @@
+<div class="form-container">
+  <header class="form-header">
+    <a routerLink="/admin" class="back-link">← Volver a administración</a>
+    <h1>{{ isEditMode ? 'Editar Película' : 'Nueva Película' }}</h1>
+  </header>
+
+  @if (loading) {
+    <p class="loading">Cargando datos...</p>
+  } @else {
+    <form [formGroup]="movieForm" (ngSubmit)="onSubmit()" class="movie-form">
+      <!-- Campo Título -->
+      <div class="form-group">
+        <label for="title">Título *</label>
+        <input
+          type="text"
+          id="title"
+          formControlName="title"
+          [class.error]="isFieldInvalid('title')"
+          placeholder="Ej: Inception"
+        />
+        @if (isFieldInvalid('title')) {
+          <span class="error-message">{{ getErrorMessage('title') }}</span>
+        }
+      </div>
+
+      <!-- Campo Género -->
+      <div class="form-group">
+        <label for="genre">Género *</label>
+        <select
+          id="genre"
+          formControlName="genre"
+          [class.error]="isFieldInvalid('genre')"
+        >
+          <option value="">Selecciona un género</option>
+          <option value="Acción">Acción</option>
+          <option value="Aventura">Aventura</option>
+          <option value="Ciencia Ficción">Ciencia Ficción</option>
+          <option value="Comedia">Comedia</option>
+          <option value="Drama">Drama</option>
+          <option value="Fantasía">Fantasía</option>
+          <option value="Horror">Horror</option>
+          <option value="Romance">Romance</option>
+          <option value="Suspenso">Suspenso</option>
+          <option value="Animación">Animación</option>
+        </select>
+        @if (isFieldInvalid('genre')) {
+          <span class="error-message">{{ getErrorMessage('genre') }}</span>
+        }
+      </div>
+
+      <!-- Campo URL de Imagen -->
+      <div class="form-group">
+        <label for="image">URL de la Imagen *</label>
+        <input
+          type="url"
+          id="image"
+          formControlName="image"
+          [class.error]="isFieldInvalid('image')"
+          placeholder="https://ejemplo.com/imagen.jpg"
+        />
+        @if (isFieldInvalid('image')) {
+          <span class="error-message">{{ getErrorMessage('image') }}</span>
+        }
+        @if (movieForm.get('image')?.value && movieForm.get('image')?.valid) {
+          <div class="image-preview">
+            <img [src]="movieForm.get('image')?.value" alt="Preview" />
+          </div>
+        }
+      </div>
+
+      <!-- Campo Descripción -->
+      <div class="form-group">
+        <label for="description">Descripción *</label>
+        <textarea
+          id="description"
+          formControlName="description"
+          [class.error]="isFieldInvalid('description')"
+          placeholder="Describe la película..."
+          rows="5"
+        ></textarea>
+        @if (isFieldInvalid('description')) {
+          <span class="error-message">{{ getErrorMessage('description') }}</span>
+        }
+      </div>
+
+      <!-- Botones -->
+      <div class="form-actions">
+        <button
+          type="button"
+          (click)="onCancel()"
+          class="btn-cancel"
+          [disabled]="submitting"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="btn-submit"
+          [disabled]="submitting"
+        >
+          {{ submitting ? 'Guardando...' : (isEditMode ? 'Actualizar' : 'Crear') }}
+        </button>
+      </div>
+    </form>
+  }
+</div>

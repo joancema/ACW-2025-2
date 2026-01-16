@@ -1,0 +1,54 @@
+<div class="admin-container">
+  <header class="admin-header">
+    <div class="header-content">
+      <a routerLink="/" class="back-link">← Volver al inicio</a>
+      <h1>Administración de Películas</h1>
+      <button (click)="onCreate()" class="btn-create">+ Nueva Película</button>
+    </div>
+  </header>
+
+  @if (loading) {
+    <p class="loading">Cargando películas...</p>
+  } @else if (movies.length === 0) {
+    <div class="empty-state">
+      <p>No hay películas registradas</p>
+      <button (click)="onCreate()" class="btn-create-large">Crear Primera Película</button>
+    </div>
+  } @else {
+    <div class="table-container">
+      <table class="movies-table">
+        <thead>
+          <tr>
+            <th>Imagen</th>
+            <th>Título</th>
+            <th>Género</th>
+            <th>Descripción</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (movie of movies; track movie.id) {
+            <tr>
+              <td>
+                <img [src]="movie.image" [alt]="movie.title" class="movie-thumbnail">
+              </td>
+              <td class="movie-title">{{ movie.title }}</td>
+              <td>
+                <span class="genre-badge">{{ movie.genre }}</span>
+              </td>
+              <td class="movie-description">{{ movie.description }}</td>
+              <td class="actions">
+                <button (click)="onEdit(movie)" class="btn-edit" title="Editar">
+                  ✏️
+                </button>
+                <button (click)="onDelete(movie)" class="btn-delete" title="Eliminar">
+                  🗑️
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
